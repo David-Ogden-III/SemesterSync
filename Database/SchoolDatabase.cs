@@ -154,4 +154,10 @@ public class SchoolDatabase
         int rowsAdded = await Database.InsertAllAsync(exams);
         return rowsAdded;
     }
+
+    public async Task<List<Exam>> GetExamsAsync()
+    {
+        await Init();
+        return await Database.Table<Exam>().ToListAsync();
+    }
 }

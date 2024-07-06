@@ -13,7 +13,6 @@ public class AllTermsViewModel : INotifyPropertyChanged
     public Command AddTermCommand { get; set; } = new(
         execute: async () =>
     {
-        MockData.CreateAllMockData();
         await Shell.Current.GoToAsync(nameof(TermDetails));
     });
 

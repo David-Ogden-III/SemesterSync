@@ -31,6 +31,7 @@ namespace C971_Ogden
 
             builder.Services.AddSingleton<SchoolDatabase>();
 
+            MockData.CreateAllMockData();
 
 #if DEBUG
             builder.Logging.AddDebug();
