@@ -1,4 +1,8 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using C971_Ogden.Database;
+using C971_Ogden.Pages;
+using C971_Ogden.ViewModel;
+using CommunityToolkit.Maui;
+using Microsoft.Extensions.Logging;
 
 namespace C971_Ogden
 {
@@ -13,10 +17,23 @@ namespace C971_Ogden
                 {
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
-                });
+                })
+                .UseMauiCommunityToolkit();
+
+            builder.Services.AddSingleton<ActiveTerm>();
+            builder.Services.AddSingleton<ActiveTermViewModel>();
+
+            builder.Services.AddSingleton<AllTerms>();
+            builder.Services.AddSingleton<AllTermsViewModel>();
+
+            builder.Services.AddTransient<TermDetails>();
+            builder.Services.AddTransient<TermDetailsViewModel>();
+
+            builder.Services.AddSingleton<SchoolDatabase>();
+
 
 #if DEBUG
-    		builder.Logging.AddDebug();
+            builder.Logging.AddDebug();
 #endif
 
             return builder.Build();
