@@ -20,6 +20,8 @@ namespace C971_Ogden
                 })
                 .UseMauiCommunityToolkit();
 
+            builder.Services.AddSingleton<SchoolDatabase>();
+
             builder.Services.AddSingleton<ActiveTerm>();
             builder.Services.AddSingleton<ActiveTermViewModel>();
 
@@ -28,11 +30,6 @@ namespace C971_Ogden
 
             builder.Services.AddTransient<TermDetails>();
             builder.Services.AddTransient<TermDetailsViewModel>();
-
-            builder.Services.AddSingleton<SchoolDatabase>();
-
-            MockData.CreateAllMockData();
-
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

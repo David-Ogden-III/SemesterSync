@@ -107,4 +107,6 @@
 	  </MauiXaml>
 	</ItemGroup>
 
+	<ProjectExtensions><VisualStudio><UserProperties XamarinHotReloadDebuggerTimeoutExceptionC971_OgdenHideInfoBar="True" /></VisualStudio></ProjectExtensions>
+
 </Project>
