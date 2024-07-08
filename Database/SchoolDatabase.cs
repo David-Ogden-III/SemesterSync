@@ -36,10 +36,11 @@ public class SchoolDatabase : IAsyncDisposable
         return await table.Where(predicate).ToListAsync();
     }
 
-    public async Task<TTable> GetFileteredItemAsync<TTable>(Expression<Func<TTable, bool>> predicate) where TTable : class, new()
+    public async Task<TTable> GetFilteredItemAsync<TTable>(Expression<Func<TTable, bool>> predicate) where TTable : class, new()
     {
         var table = await GetTableAsync<TTable>();
-        return await table.Where(predicate).FirstOrDefaultAsync();
+        var item = await table.Where(predicate).FirstOrDefaultAsync();
+        return item;
     }
 
     public async Task<bool> DeleteItemAsync<TTable>(TTable item) where TTable : class, new()
