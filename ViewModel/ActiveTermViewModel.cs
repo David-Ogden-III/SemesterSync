@@ -5,17 +5,12 @@ using C971_Ogden.Database;
 
 namespace C971_Ogden.ViewModel;
 
-public class ActiveTermViewModel : INotifyPropertyChanged
+public class ActiveTermViewModel(SchoolDatabase db) : INotifyPropertyChanged
 {
-    private readonly SchoolDatabase _db;
-
-    public ActiveTermViewModel(SchoolDatabase db)
-    {
-        _db = db;
-    }
+    private readonly SchoolDatabase _db = db;
 
     // Fields and Properties
-    private Term _activeTerm;
+    private Term? _activeTerm;
     public Term ActiveTerm
     {
         get => _activeTerm;
@@ -37,69 +32,60 @@ public class ActiveTermViewModel : INotifyPropertyChanged
         }
     }
 
-    private bool _isBusy;
-    public bool IsBusy
+    private bool _isInitialStartup = true;
+    public bool IsInitialStartup
     {
-        get => _isBusy;
+        get => _isInitialStartup;
         set
         {
-            _isBusy = value;
-            OnPropertyChanged(nameof(IsBusy));
+            _isInitialStartup = value;
+            OnPropertyChanged(nameof(IsInitialStartup));
         }
     }
 
-    private string _busyText;
-    public string BusyText
+    private bool _activeClassesHasRows;
+    public bool ActiveClassesHasRows
     {
-        get => _busyText;
+        get => _activeClassesHasRows;
         set
         {
-            _busyText = value;
-            OnPropertyChanged(nameof(BusyText));
+            _activeClassesHasRows = value;
+            OnPropertyChanged(nameof(ActiveClassesHasRows));
         }
     }
 
 
     public async Task LoadActiveTermAsync()
     {
-        await ExecuteAsync(async () =>
+        IsInitialStartup = false;
+
+        var activeTerm = await _db.GetFilteredItemAsync<Term>((term) => term.StartDate < DateTime.Now && term.EndDate > DateTime.Now);
+
+        if (activeTerm != null)
         {
-            var activeTerm = await _db.GetFileteredItemAsync<Term>((term) => term.StartDate < DateTime.Now && term.EndDate > DateTime.Now);
+            ActiveTerm ??= activeTerm;
 
-            if (activeTerm != null)
+            IEnumerable<TermSchedule> iFilteredTermSchedules = await _db.GetFileteredListAsync<TermSchedule>((termSchedule) => termSchedule.TermId == activeTerm.Id);
+
+            List<Class> activeClassList = [.. ActiveClasses];
+            foreach (TermSchedule termSchedule in iFilteredTermSchedules)
             {
-                ActiveTerm ??= activeTerm;
-
-                IEnumerable<TermSchedule> iFilteredTermSchedules = await _db.GetFileteredListAsync<TermSchedule>((termSchedule) => termSchedule.TermId == activeTerm.Id);
-
-                foreach (TermSchedule termSchedule in iFilteredTermSchedules)
-                {
-                    Class activeClass = await _db.GetFileteredItemAsync<Class>((classActive) => classActive.Id == termSchedule.ClassId);
+                Class activeClass = await _db.GetFilteredItemAsync<Class>((classActive) => classActive.Id == termSchedule.ClassId);
+                if (activeClass != null && !activeClassList.Exists((c) => c.Id == activeClass.Id))
                     ActiveClasses.Add(activeClass);
+            }
+
+            List<TermSchedule> filteredTSList = [.. iFilteredTermSchedules];
+            foreach (Class c in ActiveClasses)
+            {
+                if (!filteredTSList.Exists((ts) => ts.ClassId == c.Id))
+                    {
+                    int indexToRemove = activeClassList.FindIndex((classToRemove) => classToRemove.Id == c.Id);
+                    ActiveClasses.RemoveAt(indexToRemove);
                 }
             }
-        }, "Fetching Active Term...");
-    }
-
-    private async Task ExecuteAsync(Func<Task> operation, string? busyText = null)
-    {
-        IsBusy = true;
-        BusyText = busyText ?? "Processing...";
-        try
-        {
-            await operation?.Invoke();
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine(ex);
-        }
-        finally
-        {
-            IsBusy = false;
-            BusyText = "Processing...";
         }
     }
-
 
 
     public event PropertyChangedEventHandler? PropertyChanged;
