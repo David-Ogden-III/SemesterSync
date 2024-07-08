@@ -5,13 +5,22 @@ using C971_Ogden.Database;
 
 namespace C971_Ogden.ViewModel;
 
-public class ActiveTermViewModel(SchoolDatabase db) : INotifyPropertyChanged
+public class ActiveTermViewModel : INotifyPropertyChanged
 {
-    private readonly SchoolDatabase _db = db;
+    public ObservableCollection<Class> ActiveClasses { get; set; }
+    public Command LoadCommand { get; }
+
+    public ActiveTermViewModel()
+    {
+        ActiveClasses = [];
+        LoadCommand = new Command(execute: async () => await LoadActiveTermAsync());
+        ActiveTerm = null;
+        ActiveTermIsNotNull = false;
+    }
 
     // Fields and Properties
     private Term? _activeTerm;
-    public Term ActiveTerm
+    public Term? ActiveTerm
     {
         get => _activeTerm;
         set
@@ -21,56 +30,33 @@ public class ActiveTermViewModel(SchoolDatabase db) : INotifyPropertyChanged
         }
     }
 
-    private ObservableCollection<Class> _activeClasses = [];
-    public ObservableCollection<Class> ActiveClasses
+    private bool _activeTermIsNotNull;
+    public bool ActiveTermIsNotNull
     {
-        get => _activeClasses;
+        get => _activeTermIsNotNull;
         set
         {
-            _activeClasses = value;
-            OnPropertyChanged(nameof(ActiveClasses));
-        }
-    }
-
-    private bool _isInitialStartup = true;
-    public bool IsInitialStartup
-    {
-        get => _isInitialStartup;
-        set
-        {
-            _isInitialStartup = value;
-            OnPropertyChanged(nameof(IsInitialStartup));
-        }
-    }
-
-    private bool _activeClassesHasRows;
-    public bool ActiveClassesHasRows
-    {
-        get => _activeClassesHasRows;
-        set
-        {
-            _activeClassesHasRows = value;
-            OnPropertyChanged(nameof(ActiveClassesHasRows));
+            _activeTermIsNotNull = value;
+            OnPropertyChanged(nameof(ActiveTermIsNotNull));
         }
     }
 
 
     public async Task LoadActiveTermAsync()
     {
-        IsInitialStartup = false;
-
-        var activeTerm = await _db.GetFilteredItemAsync<Term>((term) => term.StartDate < DateTime.Now && term.EndDate > DateTime.Now);
+        var activeTerm = await SchoolDatabase.GetFilteredItemAsync<Term>((term) => term.StartDate < DateTime.Now && term.EndDate > DateTime.Now);
 
         if (activeTerm != null)
         {
-            ActiveTerm ??= activeTerm;
+            ActiveTerm = activeTerm;
+            ActiveTermIsNotNull = ActiveTerm != null;
 
-            IEnumerable<TermSchedule> iFilteredTermSchedules = await _db.GetFileteredListAsync<TermSchedule>((termSchedule) => termSchedule.TermId == activeTerm.Id);
+            IEnumerable<TermSchedule> iFilteredTermSchedules = await SchoolDatabase.GetFileteredListAsync<TermSchedule>((termSchedule) => termSchedule.TermId == activeTerm.Id);
 
             List<Class> activeClassList = [.. ActiveClasses];
             foreach (TermSchedule termSchedule in iFilteredTermSchedules)
             {
-                Class activeClass = await _db.GetFilteredItemAsync<Class>((classActive) => classActive.Id == termSchedule.ClassId);
+                Class activeClass = await SchoolDatabase.GetFilteredItemAsync<Class>((classActive) => classActive.Id == termSchedule.ClassId);
                 if (activeClass != null && !activeClassList.Exists((c) => c.Id == activeClass.Id))
                     ActiveClasses.Add(activeClass);
             }
@@ -79,7 +65,7 @@ public class ActiveTermViewModel(SchoolDatabase db) : INotifyPropertyChanged
             foreach (Class c in ActiveClasses)
             {
                 if (!filteredTSList.Exists((ts) => ts.ClassId == c.Id))
-                    {
+                {
                     int indexToRemove = activeClassList.FindIndex((classToRemove) => classToRemove.Id == c.Id);
                     ActiveClasses.RemoveAt(indexToRemove);
                 }
