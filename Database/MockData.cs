@@ -4,9 +4,6 @@ namespace C971_Ogden.Database;
 
 public static class MockData
 {
-    private static SchoolDatabase Db { get; set; } = new();
-
-
     private static Term Term1 { get; set; } = new();
     private static Term Term2 { get; set; } = new();
 
@@ -95,7 +92,7 @@ public static class MockData
 
     private static async Task CreateTerms()
     {
-        await Db.DeleteAllItemsAsync<Term>();
+        await SchoolDatabase.DeleteAllItemsAsync<Term>();
 
         Term1.TermName = "Spring Term";
         Term1.StartDate = new DateTime(2024, 01, 01);
@@ -107,13 +104,13 @@ public static class MockData
         Term2.EndDate = new DateTime(2024, 12, 31);
 
         List<Term> terms = [Term1, Term2];
-        int rowsAdded = await Db.AddAllItemsAsync(terms);
+        int rowsAdded = await SchoolDatabase.AddAllItemsAsync(terms);
         Debug.WriteLine($"Added {rowsAdded} rows to Term Table.");
     }
 
     private static async Task CreateInstructors()
     {
-        await Db.DeleteAllItemsAsync<Instructor>();
+        await SchoolDatabase.DeleteAllItemsAsync<Instructor>();
 
         Instructor1.InstructorName = "Anika Patel";
         Instructor1.Email = "anika.patel@strimeuniversity.edu";
@@ -121,13 +118,13 @@ public static class MockData
 
         List<Instructor> instructors = [Instructor1];
 
-        int rowsAdded = await Db.AddAllItemsAsync(instructors);
+        int rowsAdded = await SchoolDatabase.AddAllItemsAsync(instructors);
         Debug.WriteLine($"Added {rowsAdded} rows to Instructor Table.");
     }
 
     private static async Task CreateClasses()
     {
-        await Db.DeleteAllItemsAsync<Class>();
+        await SchoolDatabase.DeleteAllItemsAsync<Class>();
 
         for (int i = 0; i < ClassList.Count; i++)
         {
@@ -149,13 +146,13 @@ public static class MockData
             }
         }
 
-        int rowsAdded = await Db.AddAllItemsAsync(ClassList);
+        int rowsAdded = await SchoolDatabase.AddAllItemsAsync(ClassList);
         Debug.WriteLine($"Added {rowsAdded} rows to Class Table.");
     }
 
     private static async Task CreateTermSchedules()
     {
-        await Db.DeleteAllItemsAsync<TermSchedule>();
+        await SchoolDatabase.DeleteAllItemsAsync<TermSchedule>();
 
         for (int i = 0; i < TermScheduleList.Count;i++)
         {
@@ -170,25 +167,25 @@ public static class MockData
             }
         }
 
-        int rowsAdded = await Db.AddAllItemsAsync(TermScheduleList);
+        int rowsAdded = await SchoolDatabase.AddAllItemsAsync(TermScheduleList);
         Debug.WriteLine($"Added {rowsAdded} rows to TermSchedule Table.");
     }
 
     private static async Task CreateExamTypes()
     {
-        await Db.DeleteAllItemsAsync<ExamType>();
+        await SchoolDatabase.DeleteAllItemsAsync<ExamType>();
 
         ExamType1.Type = "Objective Assessment";
         ExamType2.Type = "Performance Assessment";
 
         List<ExamType> examList = [ExamType1,  ExamType2];
-        int rowsAdded = await Db.AddAllItemsAsync(examList);
+        int rowsAdded = await SchoolDatabase.AddAllItemsAsync(examList);
         Debug.WriteLine($"Added {rowsAdded} rows to ExamType Table.");
     }
 
     private static async Task CreateExams()
     {
-        await Db.DeleteAllItemsAsync<Exam>();
+        await SchoolDatabase.DeleteAllItemsAsync<Exam>();
 
         Random random = new Random();
 
@@ -213,8 +210,8 @@ public static class MockData
             PAList[i].EndTime = PAList[i].StartTime.AddHours(random.Next(4));
         }
 
-        int oARowsAdded = await Db.AddAllItemsAsync(OAList);
-        int pARowsAdded = await Db.AddAllItemsAsync(PAList);
+        int oARowsAdded = await SchoolDatabase.AddAllItemsAsync(OAList);
+        int pARowsAdded = await SchoolDatabase.AddAllItemsAsync(PAList);
 
         Debug.WriteLine($"Added to Exam Table:\n\t{oARowsAdded} Objective Assessments\n\t{pARowsAdded} Performance Assessments");
     }
