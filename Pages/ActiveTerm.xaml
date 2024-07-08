@@ -12,31 +12,31 @@
     <Grid RowDefinitions="auto,auto,*"
           Grid.Row="0">
         <controls:Header Grid.Row="0" />
-        
+
         <VerticalStackLayout Grid.Row="1"
                              Padding="30,5">
-            <Label Text="{Binding ActiveTerm.TermName}"
+            <Label Text="{Binding ActiveTerm.TermName, FallbackValue='No Active Term', TargetNullValue='No Active Term'}"
                    FontSize="32"
                    TextColor="White" />
             <HorizontalStackLayout>
                 <Label TextColor="Gray"
                        FontSize="14"
-                       Text="{Binding ActiveTerm.StartDate, StringFormat='{}{0:MM/dd/yyyy -}'}" />
+                       Text="{Binding ActiveTerm.StartDate, StringFormat='{}{0:MM/dd/yyyy -}', FallbackValue='', TargetNullValue=''}" />
                 <Label TextColor="Gray"
                        FontSize="14"
-                       Text="{Binding ActiveTerm.EndDate, StringFormat='{}{0: MM/dd/yyyy}'}" />
+                       Text="{Binding ActiveTerm.EndDate, StringFormat='{}{0: MM/dd/yyyy}', FallbackValue='', TargetNullValue=''}" />
             </HorizontalStackLayout>
-            
+
             <BoxView Color="White"
                      HeightRequest="1"
                      HorizontalOptions="Fill" />
         </VerticalStackLayout>
-        
-        
-        
+
+
+
         <ContentView Grid.Row="2"
-                    Padding="30,5"
-                     HorizontalOptions="FillAndExpand">
+                             Padding="30,5"
+                             HorizontalOptions="FillAndExpand">
             <ListView
                       ItemsSource="{Binding ActiveClasses}"
                       HasUnevenRows="True"
@@ -49,33 +49,33 @@
                     <DataTemplate x:DataType="{x:Type model:Class}">
                         <ViewCell>
                             <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
-                                  ColumnDefinitions="Auto,*"
+                              ColumnDefinitions="Auto,*"
                                   VerticalOptions="FillAndExpand"
                                   Padding="10">
-                                <Label Text="{Binding ClassName}"
-                                       FontSize="14"
-                                       TextColor="White"
-                                       Grid.Row="0" />
-                                <Label TextColor="Gray"
-                                       Text="Status"
-                                       Grid.Row="1" />
-                                <Button TextColor="Gray"
-                                        BackgroundColor="Transparent"
-                                        ImageSource="ellipsis.png"
-                                        WidthRequest="43"
-                                        Grid.Row="1"
-                                        Grid.RowSpan="2"
-                                        Grid.Column="1"
-                                        HorizontalOptions="End"
-                                        VerticalOptions="Center"
-                                        Clicked="Ellipsis_Clicked"/>
-                                <Label Text="{Binding StartDate, StringFormat='{}{0:MM/dd/yyyy}'}"
-                                       TextColor="Gray"
-                                       Grid.Row="2" />
-                                <Label Text="{Binding EndDate, StringFormat='{}{0:MM/dd/yyyy}'}"
-                                       TextColor="Gray"
-                                       Grid.Row="3" />
-                            </Grid>
+                            <Label Text="{Binding ClassName}"
+                                   FontSize="14"
+                                   TextColor="White"
+                                   Grid.Row="0" />
+                            <Label TextColor="Gray"
+                                   Text="{Binding Status}"
+                                   Grid.Row="1" />
+                            <Button TextColor="Gray"
+                                    BackgroundColor="Transparent"
+                                    ImageSource="ellipsis.png"
+                                    WidthRequest="43"
+                                    Grid.Row="1"
+                                    Grid.RowSpan="2"
+                                    Grid.Column="1"
+                                    HorizontalOptions="End"
+                                    VerticalOptions="Center"
+                                    Clicked="Ellipsis_Clicked" />
+                            <Label Text="{Binding StartDate, StringFormat='{}{0:MM/dd/yyyy}'}"
+                                   TextColor="Gray"
+                                   Grid.Row="2" />
+                            <Label Text="{Binding EndDate, StringFormat='{}{0:MM/dd/yyyy}'}"
+                                   TextColor="Gray"
+                                   Grid.Row="3" />
+                        </Grid>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
