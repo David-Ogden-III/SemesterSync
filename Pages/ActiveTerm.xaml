@@ -1,12 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:Class="C971_Ogden.Pages.ActiveTerm"
              xmlns:controls="clr-namespace:C971_Ogden.Resources.Controls"
              xmlns:viewmodel="clr-namespace:C971_Ogden.ViewModel"
              xmlns:model="clr-namespace:C971_Ogden.Database"
              x:DataType="viewmodel:ActiveTermViewModel">
 
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing"
+                                        Command="{Binding LoadCommand}" />
+    </ContentPage.Behaviors>
 
 
     <Grid RowDefinitions="auto,auto,*"
@@ -18,13 +23,13 @@
             <Label Text="{Binding ActiveTerm.TermName, FallbackValue='No Active Term', TargetNullValue='No Active Term'}"
                    FontSize="32"
                    TextColor="White" />
-            <HorizontalStackLayout>
+            <HorizontalStackLayout IsVisible="{Binding ActiveTermIsNotNull}">
                 <Label TextColor="Gray"
                        FontSize="14"
-                       Text="{Binding ActiveTerm.StartDate, StringFormat='{}{0:MM/dd/yyyy -}', FallbackValue='', TargetNullValue=''}" />
+                       Text="{Binding ActiveTerm.StartDate, StringFormat='{}{0:MM/dd/yyyy -}'}" />
                 <Label TextColor="Gray"
                        FontSize="14"
-                       Text="{Binding ActiveTerm.EndDate, StringFormat='{}{0: MM/dd/yyyy}', FallbackValue='', TargetNullValue=''}" />
+                       Text="{Binding ActiveTerm.EndDate, StringFormat='{}{0: MM/dd/yyyy}'}" />
             </HorizontalStackLayout>
 
             <BoxView Color="White"

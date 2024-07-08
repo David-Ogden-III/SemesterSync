@@ -33,13 +33,4 @@ public partial class ActiveTerm : ContentPage
                 break;
         }
     }
-    protected async override void OnAppearing()
-    {
-        base.OnAppearing();
-
-        if (_vm.IsInitialStartup)
-            await MockData.CreateAllMockData();
-
-        await _vm.LoadActiveTermAsync();
-    }
 }
