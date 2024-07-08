@@ -36,7 +36,10 @@ public partial class ActiveTerm : ContentPage
     protected async override void OnAppearing()
     {
         base.OnAppearing();
-        await MockData.CreateAllMockData();
+
+        if (_vm.IsInitialStartup)
+            await MockData.CreateAllMockData();
+
         await _vm.LoadActiveTermAsync();
     }
 }
