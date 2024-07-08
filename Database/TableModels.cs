@@ -27,6 +27,9 @@ public class Class
     [Column("className")]
     public string ClassName { get; set; }
 
+    [Column("status")]
+    public string Status { get; set; }
+
     [Column("startDate")]
     public DateTime StartDate { get; set; }
 
