@@ -20,7 +20,7 @@ namespace C971_Ogden
                 })
                 .UseMauiCommunityToolkit();
 
-            builder.Services.AddSingleton<SchoolDatabase>();
+            Task.Run(async () => await MockData.CreateAllMockData());
 
             builder.Services.AddSingleton<ActiveTerm>();
             builder.Services.AddSingleton<ActiveTermViewModel>();
