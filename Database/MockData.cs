@@ -95,8 +95,7 @@ public static class MockData
 
     private static async Task CreateTerms()
     {
-        bool hasRows = await Db.CheckIfHasRows<Term>();
-        if (hasRows) return;
+        await Db.DeleteAllItemsAsync<Term>();
 
         Term1.TermName = "Spring Term";
         Term1.StartDate = new DateTime(2024, 01, 01);
@@ -114,8 +113,7 @@ public static class MockData
 
     private static async Task CreateInstructors()
     {
-        bool hasRows = await Db.CheckIfHasRows<Instructor>();
-        if (hasRows) return;
+        await Db.DeleteAllItemsAsync<Instructor>();
 
         Instructor1.InstructorName = "Anika Patel";
         Instructor1.Email = "anika.patel@strimeuniversity.edu";
@@ -129,8 +127,7 @@ public static class MockData
 
     private static async Task CreateClasses()
     {
-        bool hasRows = await Db.CheckIfHasRows<Class>();
-        if (hasRows) return;
+        await Db.DeleteAllItemsAsync<Class>();
 
         for (int i = 0; i < ClassList.Count; i++)
         {
@@ -141,11 +138,14 @@ public static class MockData
             {
                 ClassList[i].StartDate = new DateTime(2024, 01, 01);
                 ClassList[i].EndDate = new DateTime(2024, 06, 30);
+                if (i % 2 == 0) ClassList[i].Status = "Passed";
+                else ClassList[i].Status = "Failed";
             }
             else
             {
                 ClassList[i].StartDate = new DateTime(2024, 07, 01);
                 ClassList[i].EndDate = new DateTime(2024, 12, 31);
+                ClassList[i].Status = "Active";
             }
         }
 
@@ -155,8 +155,7 @@ public static class MockData
 
     private static async Task CreateTermSchedules()
     {
-        bool hasRows = await Db.CheckIfHasRows<TermSchedule>();
-        if (hasRows) return;
+        await Db.DeleteAllItemsAsync<TermSchedule>();
 
         for (int i = 0; i < TermScheduleList.Count;i++)
         {
@@ -177,8 +176,7 @@ public static class MockData
 
     private static async Task CreateExamTypes()
     {
-        bool hasRows = await Db.CheckIfHasRows<ExamType>();
-        if (hasRows) return;
+        await Db.DeleteAllItemsAsync<ExamType>();
 
         ExamType1.Type = "Objective Assessment";
         ExamType2.Type = "Performance Assessment";
@@ -190,8 +188,7 @@ public static class MockData
 
     private static async Task CreateExams()
     {
-        bool hasRows = await Db.CheckIfHasRows<Exam>();
-        if (hasRows) return;
+        await Db.DeleteAllItemsAsync<Exam>();
 
         Random random = new Random();
 
