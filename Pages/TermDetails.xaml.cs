@@ -17,7 +17,7 @@ public partial class TermDetails : ContentPage
 
 	public async void Save_Clicked(object sender, EventArgs e)
 	{
-		await Navigation.PopModalAsync();
+		await Shell.Current.GoToAsync(nameof(AllTerms));
 	}
 
 	//public void NewClassSelected(object sender, EventArgs e)
@@ -32,17 +32,6 @@ public partial class TermDetails : ContentPage
 	//		Debug.WriteLine($"\nAdded {selectedClass.ClassName}\n");
 	//       }
 	//   }
-
-	public void RemoveClass_Clicked(object sender, EventArgs e)
-	{
-        Button clickedButton = (Button)sender;
-        object classToRemove = (object)clickedButton.BindingContext;
-		var vm = (TermDetailsViewModel)BindingContext;
-		if (vm.RemoveClassCommand.CanExecute(classToRemove))
-		{
-			vm.RemoveClassCommand.Execute(classToRemove);
-		}
-	}
 
 
 
