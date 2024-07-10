@@ -1,4 +1,5 @@
 ﻿using SQLite;
+using System.Collections.ObjectModel;
 
 namespace C971_Ogden.Database;
 
@@ -104,4 +105,9 @@ public class ExamType
 
     [Column("examType"), Unique, NotNull]
     public string Type { get; set; }
+}
+
+public class ClassGroup(Term term, ObservableCollection<Class> classes) : ObservableCollection<Class>(classes)
+{
+    public Term Term { get; set; } = term;
 }
