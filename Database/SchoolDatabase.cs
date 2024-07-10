@@ -29,13 +29,15 @@ public static class SchoolDatabase
     public static async Task<IEnumerable<TTable>> GetAllAsync<TTable>() where TTable : class, new()
     {
         var table = await GetTableAsync<TTable>();
-        return await table.ToListAsync();
+        var resultingList = await table.ToListAsync();
+        return resultingList;
     }
 
-    public static async Task<IEnumerable<TTable>> GetFileteredListAsync<TTable>(Expression<Func<TTable, bool>> predicate) where TTable : class, new()
+    public static async Task<IEnumerable<TTable>> GetFilteredListAsync<TTable>(Expression<Func<TTable, bool>> predicate) where TTable : class, new()
     {
         var table = await GetTableAsync<TTable>();
-        return await table.Where(predicate).ToListAsync();
+        var items = await table.Where(predicate).ToListAsync();
+        return items;
     }
 
     public static async Task<TTable> GetFilteredItemAsync<TTable>(Expression<Func<TTable, bool>> predicate) where TTable : class, new()
