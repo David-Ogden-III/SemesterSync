@@ -14,9 +14,11 @@ public partial class AllTerms : ContentPage
 
     private async void TermEllipsis_Clicked(object sender, EventArgs e)
     {
+
+        
         Button clickedButton = (Button)sender;
-        Term selectedTerm = (Term)clickedButton.BindingContext;
-        string action = await DisplayActionSheet(selectedTerm.TermName, "Cancel", null, "Edit", "Delete");
+        ClassGroup selectedClassGroup = (ClassGroup)clickedButton.BindingContext;
+        string action = await DisplayActionSheet(selectedClassGroup.Term.TermName, "Cancel", null, "Edit", "Delete");
         Debug.WriteLine("Action: " + action);
 
         var vm = (AllTermsViewModel)BindingContext;
@@ -24,10 +26,10 @@ public partial class AllTerms : ContentPage
         switch (action)
         {
             case "Edit":
-                vm.EditTermCommand.Execute(selectedTerm);
+                vm.EditTermCommand.Execute(selectedClassGroup);
                 break;
             case "Delete":
-                Debug.WriteLine("Delete this term");
+                vm.DeleteTermCommand.Execute(selectedClassGroup);
                 break;
             default:
                 Debug.WriteLine("Something went wrong");

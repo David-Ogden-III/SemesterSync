@@ -5,7 +5,13 @@
              xmlns:controls="clr-namespace:C971_Ogden.Resources.Controls"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodel="clr-namespace:C971_Ogden.ViewModel"
+             xmlns:model="clr-namespace:C971_Ogden.Database"
              x:DataType="viewmodel:AllTermsViewModel">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing"
+                                        Command="{Binding LoadCommand}" />
+    </ContentPage.Behaviors>
 
 
     <Grid RowDefinitions="auto,auto,*">
@@ -23,14 +29,14 @@
                      HorizontalOptions="Fill" />
         </VerticalStackLayout>
 
-
-
         <ContentView Padding="30,5"
                      Grid.Row="2">
-            <ListView x:Name="Listviews"
-                      HasUnevenRows="True"
+            <ListView HasUnevenRows="True"
+                      ItemsSource="{Binding Classes}"
+                      IsGroupingEnabled="True"
                       Margin="0,-10,0,0"
                       SelectionMode="None"
+                      SeparatorVisibility="None"
                       SeparatorColor="DimGray"
                       VerticalScrollBarVisibility="Never">
                 <ListView.Header>
@@ -39,116 +45,99 @@
                                 BackgroundColor="Transparent"
                                 Text="+ Add Term"
                                 Command="{Binding AddTermCommand}" />
-                        <BoxView Color="DimGray"
-                                 HeightRequest="1" />
                     </VerticalStackLayout>
                 </ListView.Header>
-                <ListView.ItemTemplate>
-                    <DataTemplate>
+
+                <ListView.GroupHeaderTemplate>
+                    <DataTemplate x:DataType="{x:Type model:ClassGroup}">
                         <ViewCell>
-                            <toolkit:Expander Padding="10">
-                                <toolkit:Expander.Header>
-                                    <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto"
-                                          ColumnDefinitions="Auto,*"
-                                          VerticalOptions="FillAndExpand">
+                            <Grid RowDefinitions="6,Auto,Auto"
+                                  ColumnDefinitions="Auto,*"
+                                  VerticalOptions="FillAndExpand">
 
-                                        <Label Text="TermName"
-                                               FontSize="14"
+                                <BoxView Color="DimGray"
+                                         HeightRequest="1"
+                                         VerticalOptions="Start"
+                                         Grid.ColumnSpan="3"/>
+
+                                <Label Text="{Binding Term.TermName}"
+                                       FontSize="22"
+                                       TextColor="White"
+                                       Grid.Row="1"
+                                       />
+                                <Button TextColor="Gray"
+                                        BackgroundColor="Transparent"
+                                        ImageSource="ellipsis.png"
+                                        WidthRequest="43"
+                                        Clicked="TermEllipsis_Clicked"
+                                        Grid.Row="0"
+                                        Grid.RowSpan="3"
+                                        Grid.Column="1"
+                                        HorizontalOptions="End"
+                                        VerticalOptions="Center" />
+
+                                <HorizontalStackLayout Grid.Row="2"
+                                                       Spacing="5">
+                                    <Label Text="{Binding Term.StartDate, StringFormat='{}{0:MM/dd/yyyy}'}"
+                                           TextColor="Gray" />
+                                    <Label Text="-"
+                                           TextColor="Gray" />
+                                    <Label Text="{Binding Term.EndDate, StringFormat='{}{0:MM/dd/yyyy}'}"
+                                           TextColor="Gray" />
+                                </HorizontalStackLayout>
+                                
+                            </Grid>
+                        </ViewCell>
+                    </DataTemplate>
+                </ListView.GroupHeaderTemplate>
+
+                <ListView.ItemTemplate>
+                    <DataTemplate x:DataType="{x:Type model:Class}">
+                        <ViewCell>
+                            <VerticalStackLayout Margin="0,10,0,0"
+                                                 HorizontalOptions="FillAndExpand">
+
+                                <StackLayout HorizontalOptions="FillAndExpand">
+
+                                    <Grid RowDefinitions="Auto,Auto"
+                                          ColumnDefinitions="Auto, *, 100"
+                                          HorizontalOptions="FillAndExpand">
+                                        <Label Text="{Binding ClassName}"
                                                TextColor="White"
-                                               Grid.Row="0" />
-                                        <HorizontalStackLayout Grid.Row="1"
-                                                               Grid.RowSpan="2"
-                                                               Grid.Column="1"
-                                                               HorizontalOptions="End"
-                                                               VerticalOptions="Center"
-                                                               Spacing="10">
-                                            <Button TextColor="Gray"
-                                                    BackgroundColor="Transparent"
-                                                    ImageSource="ellipsis.png"
-                                                    WidthRequest="43"
-                                                    Clicked="TermEllipsis_Clicked"/>
-                                            <Image Source="chevron_down.png"
-                                                   WidthRequest="15">
-                                                <Image.Triggers>
-                                                    <DataTrigger Binding="{Binding Source={RelativeSource AncestorType={x:Type toolkit:Expander}}, Path=IsExpanded}"
-                                                                 TargetType="Image"
-                                                                 Value="True">
-                                                        <Setter Property="Rotation"
-                                                                Value="180" />
-                                                    </DataTrigger>
-                                                </Image.Triggers>
-                                            </Image>
-                                        </HorizontalStackLayout>
-
-                                        <Label Text="Start Date"
+                                               Grid.Row="0"
+                                               Grid.Column="0" />
+                                        <Label Text="{Binding Status}"
                                                TextColor="Gray"
-                                               Grid.Row="2" />
-                                        <Label Text="EndDate"
+                                               Grid.Row="1"
+                                               Grid.Column="0" />
+                                        <Label Text="{Binding StartDate, StringFormat='{}{0:MM/dd/yyyy}'}"
                                                TextColor="Gray"
-                                               Grid.Row="3" />
+                                               Grid.Row="0"
+                                               Grid.Column="1"
+                                               HorizontalOptions="End" />
+                                        <Button ImageSource="Ellipsis.png"
+                                                WidthRequest="41"
+                                                BackgroundColor="Transparent"
+                                                TextColor="Gray"
+                                                Grid.Column="2"
+                                                Grid.Row="0"
+                                                Grid.RowSpan="2"
+                                                HorizontalOptions="End"
+                                                VerticalOptions="Center" />
+                                        <Label Text="{Binding EndDate, StringFormat='{}{0:MM/dd/yyyy}'}"
+                                               TextColor="Gray"
+                                               Grid.Row="1"
+                                               Grid.Column="1"
+                                               HorizontalOptions="End" />
                                     </Grid>
-                                </toolkit:Expander.Header>
-                                <toolkit:Expander.Content>
-                                    <VerticalStackLayout Margin="0,10,0,0"
-                                                         HorizontalOptions="FillAndExpand">
-                                        <Label Text="Classes"
-                                               TextColor="White"
-                                               FontSize="14"
-                                               TextDecorations="Underline" />
-                                        <StackLayout HorizontalOptions="FillAndExpand">
-                                            <BindableLayout.ItemTemplate>
-                                                <DataTemplate>
-                                                    <Grid RowDefinitions="Auto,Auto,Auto, 11"
-                                                          ColumnDefinitions="Auto, *, Auto"
-                                                          HorizontalOptions="FillAndExpand"
-                                                          Margin="0,5">
-                                                        <!--<Label Text="{Binding ClassName}"
-                                                               TextColor="White"
-                                                               Grid.Row="0"
-                                                               Grid.Column="0" />
-                                                        <Label Text="{Binding Path=Status}"
-                                                               TextColor="Gray"
-                                                               Grid.Row="1"
-                                                               Grid.Column="0" />
-                                                        <Label Text="{Binding Path=startDate}"
-                                                               TextColor="Gray"
-                                                               Grid.Row="0"
-                                                               Grid.Column="1"
-                                                               HorizontalOptions="Center" />
-                                                        <Button ImageSource="Ellipsis.png"
-                                                                WidthRequest="41"
-                                                                BackgroundColor="Transparent"
-                                                                TextColor="Gray"
-                                                                Grid.Column="2"
-                                                                Grid.Row="0"
-                                                                Grid.RowSpan="2"
-                                                                HorizontalOptions="End"
-                                                                VerticalOptions="Center" />
-                                                        <Label Text="{Binding Path=endDate}"
-                                                               TextColor="Gray"
-                                                               Grid.Row="1"
-                                                               Grid.Column="1"
-                                                               HorizontalOptions="Center" />-->
-                                                        <!-- Build failing: Input string was not in a correct format -->
-                                                        
-
-                                                        <BoxView Color="DimGray"
-                                                                 HeightRequest="1"
-                                                                 VerticalOptions="End"
-                                                                 Grid.Row="3"
-                                                                 Grid.Column="0"
-                                                                 Grid.ColumnSpan="3" />
-                                                    </Grid>
-                                                </DataTemplate>
-                                            </BindableLayout.ItemTemplate>
-                                        </StackLayout>
-                                    </VerticalStackLayout>
-                                </toolkit:Expander.Content>
-                            </toolkit:Expander>
+                                </StackLayout>
+                            </VerticalStackLayout>
                         </ViewCell>
                     </DataTemplate>
                 </ListView.ItemTemplate>
             </ListView>
         </ContentView>
+
+
     </Grid>
 </ContentPage>
