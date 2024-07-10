@@ -51,7 +51,7 @@ public class ActiveTermViewModel : INotifyPropertyChanged
             ActiveTerm = activeTerm;
             ActiveTermIsNotNull = ActiveTerm != null;
 
-            IEnumerable<TermSchedule> iFilteredTermSchedules = await SchoolDatabase.GetFileteredListAsync<TermSchedule>((termSchedule) => termSchedule.TermId == activeTerm.Id);
+            IEnumerable<TermSchedule> iFilteredTermSchedules = await SchoolDatabase.GetFilteredListAsync<TermSchedule>((termSchedule) => termSchedule.TermId == activeTerm.Id);
 
             List<Class> activeClassList = [.. ActiveClasses];
             foreach (TermSchedule termSchedule in iFilteredTermSchedules)
