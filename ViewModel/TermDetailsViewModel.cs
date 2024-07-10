@@ -3,18 +3,26 @@ using System.Diagnostics;
 using C971_Ogden.Database;
 
 namespace C971_Ogden.ViewModel;
-[QueryProperty("SelectedTerm", "SelectedTerm")]
+[QueryProperty(nameof(SelectedCG), "SelectedCG")]
 public class TermDetailsViewModel : INotifyPropertyChanged
 {
-    Term? selectedTerm = null;
-
-    public Term? SelectedTerm
+    public TermDetailsViewModel()
     {
-        get => selectedTerm;
+        RemoveClassCommand = new Command<Class>(execute: async (Class classToDelete) => await RemoveClass(classToDelete));
+    }
+    public Command<Class> RemoveClassCommand { get; }
+
+
+
+    ClassGroup? _selectedCG;
+
+    public ClassGroup? SelectedCG
+    {
+        get => _selectedCG;
         set
         {
-            selectedTerm = value;
-            OnPropertyChanged(nameof(SelectedTerm));
+            _selectedCG = value;
+            OnPropertyChanged(nameof(SelectedCG));
         }
     }
 
@@ -32,12 +40,15 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             await Shell.Current.GoToAsync("..");
         });
 
-    public Command RemoveClassCommand { get; set; } = new(
-        execute: (object classToDelete) =>
-        {
-            Class classs = (Class)classToDelete;
-            Debug.WriteLine(classs.ClassName);
-        });
+    private async Task RemoveClass(Class classToDelete)
+    {
+        TermSchedule ts = await SchoolDatabase.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == classToDelete.Id);
+
+        bool rowDeleted = await SchoolDatabase.DeleteItemAsync(ts);
+
+        if (rowDeleted)
+            SelectedCG.Remove(classToDelete);
+    }
 
 
 
