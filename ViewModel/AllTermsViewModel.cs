@@ -55,7 +55,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
     private async Task LoadClasses()
     {
         Classes.Clear();
-        List<Term> allTermResults = (await SchoolDatabase.GetAllAsync<Term>()).ToList();
+        List<Term> allTermResults = (await SchoolDatabase.GetAllAsync<Term>());
         ObservableCollection<ClassGroup> cg = [];
 
         foreach (Term term in allTermResults)
