@@ -41,7 +41,7 @@ public class Class
     [Column("notes")]
     public string Notes { get; set; }
 
-    [Column("instructorId")]
+    [Column("instructorId"),Indexed]
     public int InstructorId { get; set; }
 }
 
@@ -90,10 +90,10 @@ public class Exam
     [Column("endTime")]
     public DateTime EndTime { get; set; }
 
-    [Column("classId"), NotNull]
+    [Column("classId"), NotNull, Indexed]
     public int ClassId { get; set; }
 
-    [Column("examTypeId"), NotNull]
+    [Column("examTypeId"), NotNull, Indexed]
     public int ExamTypeId { get; set; }
 }
 
