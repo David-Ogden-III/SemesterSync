@@ -6,7 +6,6 @@ public static class MockData
 {
     private static Term Term1 { get; set; } = new();
     private static Term Term2 { get; set; } = new();
-    private static Term Term3 { get; set; } = new();
 
     private static Class Class1 { get; set; } = new();
     private static Class Class2 { get; set; } = new();
@@ -20,13 +19,12 @@ public static class MockData
     private static Class Class10 { get; set; } = new();
     private static Class Class11 { get; set; } = new();
     private static Class Class12 { get; set; } = new();
-    private static Class Class13 { get; set; } = new();
     private static List<string> ClassNames { get; set; } =
         ["US History", "Chemistry", "Biology", "Health", "Communications", "Art",
-        "Trigonometry", "Algebra", "Spanish", "Intro to Python", "Web Fundamentals", "Hardware and OS", "Testing"];
+        "Trigonometry", "Algebra", "Spanish", "Intro to Python", "Web Fundamentals", "Hardware and OS"];
     private static List<Class> ClassList { get; set; } =
         [Class1, Class2, Class3, Class4, Class5, Class6,
-        Class7, Class8, Class9, Class10, Class11, Class12, Class13];
+        Class7, Class8, Class9, Class10, Class11, Class12];
 
     private static TermSchedule TermSchedule1 { get; set; } = new();
     private static TermSchedule TermSchedule2 { get; set; } = new();
@@ -40,10 +38,9 @@ public static class MockData
     private static TermSchedule TermSchedule10 { get; set; } = new();
     private static TermSchedule TermSchedule11 { get; set; } = new();
     private static TermSchedule TermSchedule12 { get; set; } = new();
-    private static TermSchedule TermSchedule13 { get; set; } = new();
     private static List<TermSchedule> TermScheduleList { get; set; } =
         [TermSchedule1, TermSchedule2, TermSchedule3, TermSchedule4, TermSchedule5, TermSchedule6,
-        TermSchedule7, TermSchedule8, TermSchedule9, TermSchedule10, TermSchedule11, TermSchedule12, TermSchedule13];
+        TermSchedule7, TermSchedule8, TermSchedule9, TermSchedule10, TermSchedule11, TermSchedule12];
 
     private static Exam OA1 { get; set; } = new();
     private static Exam OA2 { get; set; } = new();
@@ -105,11 +102,7 @@ public static class MockData
         Term2.StartDate = new DateTime(2024, 07, 01);
         Term2.EndDate = new DateTime(2024, 12, 31);
 
-        Term3.TermName = "Spring Term";
-        Term3.StartDate = new DateTime(2024, 01, 01);
-        Term3.EndDate = new DateTime(2024, 06, 30);
-
-        List<Term> terms = [Term1, Term2, Term3];
+        List<Term> terms = [Term1, Term2];
         int rowsAdded = await SchoolDatabase.AddAllItemsAsync(terms);
         Debug.WriteLine($"Added {rowsAdded} rows to Term Table.");
     }
@@ -167,12 +160,10 @@ public static class MockData
             {
                 TermScheduleList[i].TermId = Term1.Id;
             }
-            else if (i <= 11)
+            else 
             {
                 TermScheduleList[i].TermId = Term2.Id;
             }
-            else
-                TermScheduleList[i].TermId = Term3.Id;
         }
 
         int rowsAdded = await SchoolDatabase.AddAllItemsAsync(TermScheduleList);
