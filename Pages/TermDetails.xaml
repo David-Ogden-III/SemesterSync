@@ -50,7 +50,7 @@
                    Keyboard="Text"
                    HeightRequest="35"
                    Placeholder="Term Name"
-                   Text="{Binding SelectedCG.Term.TermName}" />
+                   Text="{Binding TermName}" />
 
             <Label Text="Start Date"
                    TextColor="White"
@@ -62,7 +62,9 @@
                         Grid.Row="1"
                         Grid.Column="1"
                         HeightRequest="35"
-                        Date="{Binding SelectedCG.Term.StartDate}" />
+                        MinimumDate="01/01/2020"
+                        MaximumDate="01/01/2035"
+                        Date="{Binding StartDate}" />
 
 
 
@@ -75,7 +77,9 @@
                         Grid.Row="2"
                         Grid.Column="1"
                         HeightRequest="35"
-                        Date="{Binding SelectedCG.Term.EndDate}" />
+                        MinimumDate="01/01/2020"
+                        MaximumDate="01/01/2035"
+                        Date="{Binding EndDate}" />
 
             <Label Text="Classes"
                    TextColor="White"
@@ -93,7 +97,7 @@
                     HeightRequest="35">
                 <Picker.Behaviors>
                     <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
-                                                    Command="{Binding PickerIndexChangedCommand}"
+                                                    Command="{Binding SelectionChangedCommand}"
                                                     x:DataType="{x:Type viewmodel:TermDetailsViewModel}"/>
                 </Picker.Behaviors>
             </Picker>
@@ -186,7 +190,7 @@
                         HeightRequest="40"
                         VerticalOptions="Center"
                         BackgroundColor="{StaticResource ControlColor}"
-                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TermDetailsViewModel}}, Path=SaveClickedCommand}" />
+                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TermDetailsViewModel}}, Path=SaveCommand}" />
             </HorizontalStackLayout>
         </VerticalStackLayout>
     </Grid>
