@@ -9,6 +9,12 @@
              xmlns:model="clr-namespace:C971_Ogden.Database"
              x:DataType="viewmodel:TermDetailsViewModel">
 
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing"
+                                        Command="{Binding LoadCommand}" />
+    </ContentPage.Behaviors>
+    
+
 
     <Grid RowDefinitions="auto,auto,auto,*,70">
 
@@ -77,11 +83,20 @@
                    HorizontalOptions="End"
                    VerticalOptions="Center" />
             <Picker Title="Add a Class"
-                    x:Name="ClassPicker"
+                    ItemsSource="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TermDetailsViewModel}}, Path=AllClasses}"
+                    SelectedItem="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:TermDetailsViewModel}}, Path=SelectedClass}"
+                    ItemDisplayBinding="{Binding ClassName}"
+                    x:DataType="{x:Type model:Class}"
                     BackgroundColor="White"
                     Grid.Row="3"
                     Grid.Column="1"
-                    HeightRequest="35" />
+                    HeightRequest="35">
+                <Picker.Behaviors>
+                    <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                                                    Command="{Binding PickerIndexChangedCommand}"
+                                                    x:DataType="{x:Type viewmodel:TermDetailsViewModel}"/>
+                </Picker.Behaviors>
+            </Picker>
 
             <Label Text="Selected Classes"
                    TextColor="White"
@@ -94,6 +109,7 @@
                   HasUnevenRows="True"
                   SelectionMode="None"
                   SeparatorVisibility="None"
+                  CachingStrategy="RecycleElement"
                   ItemsSource="{Binding SelectedCG}"
                   VerticalScrollBarVisibility="Never">
 
