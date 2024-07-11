@@ -26,7 +26,7 @@ public static class SchoolDatabase
         return db.Table<TTable>();
     }
 
-    public static async Task<IEnumerable<TTable>> GetAllAsync<TTable>() where TTable : class, new()
+    public static async Task<List<TTable>> GetAllAsync<TTable>() where TTable : class, new()
     {
         var table = await GetTableAsync<TTable>();
         var resultingList = await table.ToListAsync();
