@@ -8,14 +8,32 @@ public class TermDetailsViewModel : INotifyPropertyChanged
 {
     public TermDetailsViewModel()
     {
-        RemoveClassCommand = new Command<Class>(execute: async (Class classToDelete) => await RemoveClass(classToDelete));
+        ClassesInDB = [];
+        AllClasses = [];
+        RemoveClassCommand = new Command<Class>(execute: (Class classToDelete) => RemoveClass(classToDelete));
+        LoadCommand = new Command(execute: async () => await Load());
+        PickerIndexChangedCommand = new Command(execute: () => SelectionChanged());
+    }
+
+    // Collections
+    private List<Class> ClassesInDB { get; set; }
+    private IEnumerable<Class> _allClasses;
+    public IEnumerable<Class> AllClasses
+    {
+        get => _allClasses;
+        set
+        {
+            _allClasses = value;
+            OnPropertyChanged(nameof(AllClasses));
+        }
     }
     public Command<Class> RemoveClassCommand { get; }
+    public Command LoadCommand { get; }
+    public Command PickerIndexChangedCommand { get; }
 
 
-
+    // Objects
     ClassGroup? _selectedCG;
-
     public ClassGroup? SelectedCG
     {
         get => _selectedCG;
@@ -26,6 +44,19 @@ public class TermDetailsViewModel : INotifyPropertyChanged
         }
     }
 
+    private Class _selectedClass;
+    public Class SelectedClass
+    {
+        get => _selectedClass;
+        set
+        {
+            _selectedClass = value;
+            OnPropertyChanged(nameof(SelectedClass));
+        }
+    }
+
+
+    // Commands
     public Command CancelClickedCommand { get; set; } = new(
         execute: async () =>
         {
@@ -40,14 +71,36 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             await Shell.Current.GoToAsync("..");
         });
 
-    private async Task RemoveClass(Class classToDelete)
+    
+    // Command Definitions
+    private void RemoveClass(Class classToDelete)
     {
-        TermSchedule ts = await SchoolDatabase.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == classToDelete.Id);
+        SelectedCG?.Remove(classToDelete);
+    }
 
-        bool rowDeleted = await SchoolDatabase.DeleteItemAsync(ts);
+    private async Task Load()
+    {
+        var allClasses = await SchoolDatabase.GetAllAsync<Class>();
+        AllClasses = allClasses.AsEnumerable();
+        if (SelectedCG != null)
+        {
+            ClassesInDB = [.. SelectedCG];
+        }
 
-        if (rowDeleted)
-            SelectedCG.Remove(classToDelete);
+            
+        else SelectedCG = new ClassGroup(new Term(), []);
+    }
+
+    public void SelectionChanged()
+    {
+
+        if (SelectedCG != null)
+        {
+            List<Class> allClasses = [.. SelectedCG];
+            bool classalreadyExists = allClasses.Exists(c => c.Id == SelectedClass.Id);
+            if (!classalreadyExists)
+                SelectedCG.Add(SelectedClass);
+        }
     }
 
 
