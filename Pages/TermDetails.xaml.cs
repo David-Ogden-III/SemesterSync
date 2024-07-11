@@ -4,35 +4,9 @@ namespace C971_Ogden.Pages;
 
 public partial class TermDetails : ContentPage
 {
-	public TermDetails(TermDetailsViewModel vm)
-	{
-		InitializeComponent();
-		BindingContext = vm;
+    public TermDetails(TermDetailsViewModel vm)
+    {
+        InitializeComponent();
+        BindingContext = vm;
     }
-
-	public void Cancel_Clicked(object sender, EventArgs e)
-	{
-		Navigation.PopModalAsync();
-	}
-
-	public async void Save_Clicked(object sender, EventArgs e)
-	{
-		await Shell.Current.GoToAsync(nameof(AllTerms));
-	}
-
-	//public void NewClassSelected(object sender, EventArgs e)
-	//{
-	//       var picker = (Picker)sender;
-	//       int selectedIndex = picker.SelectedIndex;
-
-	//       if (selectedIndex != -1)
-	//       {
-	//		Class1 selectedClass = (Class1)picker.ItemsSource[selectedIndex];
-	//           SelectedClasses.Add(selectedClass);
-	//		Debug.WriteLine($"\nAdded {selectedClass.ClassName}\n");
-	//       }
-	//   }
-
-
-
 }
