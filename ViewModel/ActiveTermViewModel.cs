@@ -71,6 +71,12 @@ public class ActiveTermViewModel : INotifyPropertyChanged
                 }
             }
         }
+        else
+        {
+            ActiveTerm = null;
+            ActiveTermIsNotNull = ActiveTerm != null;
+            ActiveClasses.Clear();
+        }
     }
 
 
