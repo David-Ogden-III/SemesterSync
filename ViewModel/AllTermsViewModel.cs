@@ -43,7 +43,8 @@ public class AllTermsViewModel : INotifyPropertyChanged
         foreach (Class classToDelete in selectedCG)
         {
             string className = classToDelete.ClassName;
-            bool classDeleted = await SchoolDatabase.DeleteItemAsync(classToDelete);
+            TermSchedule termSchedule = (await SchoolDatabase.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == classToDelete.Id));
+            bool classDeleted = await SchoolDatabase.DeleteItemAsync(termSchedule);
             Debug.WriteLineIf(classDeleted, $"Deleted Class: {className}");
         }
 
