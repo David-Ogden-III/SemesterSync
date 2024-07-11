@@ -34,6 +34,7 @@
             <ListView HasUnevenRows="True"
                       ItemsSource="{Binding Classes}"
                       IsGroupingEnabled="True"
+                      CachingStrategy="RecycleElement"
                       Margin="0,-10,0,0"
                       SelectionMode="None"
                       SeparatorVisibility="None"
