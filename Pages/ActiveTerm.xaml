@@ -73,6 +73,8 @@
                                    Grid.Column="1"
                                    HorizontalOptions="End" />
                             <Button ImageSource="Ellipsis.png"
+                                    Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:ActiveTermViewModel}}, Path=EllipsisClickedCommand}"
+                                    CommandParameter="{Binding .}"
                                     WidthRequest="41"
                                     BackgroundColor="Transparent"
                                     TextColor="Gray"
