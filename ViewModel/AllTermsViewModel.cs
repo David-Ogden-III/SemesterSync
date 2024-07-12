@@ -10,20 +10,49 @@ public class AllTermsViewModel : INotifyPropertyChanged
 {
     public AllTermsViewModel()
     {
-        Classes = [];
         LoadCommand = new Command(execute: async () => await LoadClasses());
         DeleteTermCommand = new Command<ClassGroup>(execute: async (ClassGroup cg) => await DeleteTerm(cg));
+        TermEllipsisClickedCommand = new Command<ClassGroup>(execute: async (ClassGroup selectedCG) => await TermEllipsisClicked(selectedCG));
+        ClassEllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await ClassEllipsisClicked(selectedClass));
     }
 
-    public ObservableCollection<ClassGroup> Classes { get; set; }
+    // Collections
+    public ObservableCollection<ClassGroup> Classes { get; set; } = [];
+
+
+    // Commands
     public Command LoadCommand { get; }
     public Command DeleteTermCommand { get; }
+
+    public Command TermEllipsisClickedCommand { get; }
+    public Command ClassEllipsisClickedCommand { get; }
 
     public Command AddTermCommand { get; set; } = new(
         execute: async () =>
     {
         await Shell.Current.GoToAsync(nameof(TermDetails));
     });
+
+    public Command<Class> EditClassCommand { get; set; } = new(
+        execute: async (Class selectedClass) =>
+    {
+        await Shell.Current.GoToAsync(nameof(UpdateClass),
+            new Dictionary<string, object>
+            {
+                {"SelectedClass", selectedClass }
+            });
+    });
+
+    public Command<Class> DetailedClassCommand { get; set; } = new(
+        execute: async (Class selectedClass) =>
+        {
+            await Shell.Current.GoToAsync(nameof(DetailedClass),
+                new Dictionary<string, object>
+                {
+                {"SelectedClass", selectedClass }
+                });
+        });
+
 
     public Command<ClassGroup> EditTermCommand { get; set; } = new(
         execute: async (ClassGroup selectedCG) =>
@@ -35,6 +64,8 @@ public class AllTermsViewModel : INotifyPropertyChanged
             });
     });
 
+
+    // Command Definitions
     private async Task DeleteTerm(ClassGroup selectedCG)
     {
             Term selectedTerm = selectedCG.Term;
@@ -51,7 +82,6 @@ public class AllTermsViewModel : INotifyPropertyChanged
         if (itemDeleted)
             Classes.Remove(selectedCG);
     }
-
 
     private async Task LoadClasses()
     {
@@ -75,6 +105,45 @@ public class AllTermsViewModel : INotifyPropertyChanged
         }
 
     }
+
+    private async Task TermEllipsisClicked(ClassGroup selectedCG)
+    {
+        string action = await Shell.Current.CurrentPage.DisplayActionSheet(selectedCG.Term.TermName, "Cancel", null, "Edit", "Delete");
+        Debug.WriteLine("Action: " + action);
+
+        switch (action)
+        {
+            case "Edit":
+                EditTermCommand.Execute(selectedCG);
+                break;
+            case "Delete":
+                DeleteTermCommand.Execute(selectedCG);
+                break;
+            default:
+                Debug.WriteLine("No Action Selected");
+                break;
+        }
+    }
+
+    private async Task ClassEllipsisClicked(Class selectedClass)
+    {
+        string action = await Shell.Current.CurrentPage.DisplayActionSheet(selectedClass.ClassName, "Cancel", null, "Edit", "Detailed View");
+        Debug.WriteLine("Action: " + action);
+
+        switch (action)
+        {
+            case "Edit":
+                EditClassCommand.Execute(selectedClass);
+                break;
+            case "Detailed View":
+                DetailedClassCommand.Execute(selectedClass);
+                break;
+            default:
+                Debug.WriteLine("No Action Selected");
+                break;
+        }
+    }
+
 
 
     public event PropertyChangedEventHandler? PropertyChanged;
