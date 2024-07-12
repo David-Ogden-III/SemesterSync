@@ -30,6 +30,9 @@ namespace C971_Ogden
 
             builder.Services.AddTransient<TermDetails>();
             builder.Services.AddTransient<TermDetailsViewModel>();
+
+            builder.Services.AddSingleton<AllClasses>();
+            builder.Services.AddSingleton<AllClassesViewModel>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
