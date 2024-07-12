@@ -9,6 +9,8 @@ namespace C971_Ogden
             InitializeComponent();
 
             Routing.RegisterRoute(nameof(TermDetails), typeof(TermDetails));
+            Routing.RegisterRoute(nameof(UpdateClass), typeof(UpdateClass));
+            Routing.RegisterRoute(nameof(DetailedClass), typeof(DetailedClass));
         }
     }
 }
