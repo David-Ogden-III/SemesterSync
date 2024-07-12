@@ -70,7 +70,8 @@
                                         BackgroundColor="Transparent"
                                         ImageSource="ellipsis.png"
                                         WidthRequest="43"
-                                        Clicked="TermEllipsis_Clicked"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AllTermsViewModel}}, Path=TermEllipsisClickedCommand}"
+                                        CommandParameter="{Binding .}"
                                         Grid.Row="0"
                                         Grid.RowSpan="3"
                                         Grid.Column="1"
@@ -117,6 +118,8 @@
                                                Grid.Column="1"
                                                HorizontalOptions="End" />
                                         <Button ImageSource="Ellipsis.png"
+                                                Command="{Binding Source={RelativeSource AncestorType={x:Type viewmodel:AllTermsViewModel}}, Path=ClassEllipsisClickedCommand}"
+                                                CommandParameter="{Binding .}"
                                                 WidthRequest="41"
                                                 BackgroundColor="Transparent"
                                                 TextColor="Gray"
