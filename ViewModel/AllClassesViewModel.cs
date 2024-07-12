@@ -89,7 +89,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
 
     private async Task EllipsisClicked(Class selectedClass)
     {
-        string action = await Shell.Current.CurrentPage.DisplayActionSheet(selectedClass.ClassName, "Cancel", "Delete", "Edit", "Detailed View");
+        string action = await Shell.Current.CurrentPage.DisplayActionSheet(selectedClass.ClassName, "Cancel", null, "Edit", "Detailed View", "Delete");
         Debug.WriteLine("Action: " + action);
 
         switch (action)
