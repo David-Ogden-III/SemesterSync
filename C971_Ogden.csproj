@@ -59,6 +59,7 @@
 	<ItemGroup>
 	  <None Remove="Resources\Images\chevron_down.svg" />
 	  <None Remove="Resources\Images\ellipsis.svg" />
+	  <None Remove="Resources\Images\left_arrow.svg" />
 	  <None Remove="Resources\Images\x_mark.svg" />
 	</ItemGroup>
 
