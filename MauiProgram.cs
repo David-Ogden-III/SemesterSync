@@ -33,6 +33,9 @@ namespace C971_Ogden
 
             builder.Services.AddSingleton<AllClasses>();
             builder.Services.AddSingleton<AllClassesViewModel>();
+
+            builder.Services.AddTransient<DetailedClass>();
+            builder.Services.AddTransient<DetailedClassViewModel>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
