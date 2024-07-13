@@ -107,7 +107,20 @@ public class ExamType
     public string Type { get; set; }
 }
 
+
+// Non Table Helper Classes
 public class ClassGroup(Term term, ObservableCollection<Class> classes) : ObservableCollection<Class>(classes)
 {
     public Term Term { get; set; } = term;
+}
+
+public class DetailedExam(Exam exam, string examType)
+{
+    public int ExamId { get; set; } = exam.Id;
+    public string ExamName { get; set; } = exam.ExamName;
+    public DateTime StartTime { get; set; } = exam.StartTime;
+    public DateTime EndTime { get; set; } = exam.EndTime;
+    public int ClassId { get; set; } = exam.ClassId;
+    public int ExamTypeId { get; set; } = exam.ExamTypeId;
+    public string ExamType { get; set; } = examType;
 }
