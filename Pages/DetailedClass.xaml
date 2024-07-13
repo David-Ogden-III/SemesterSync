@@ -2,11 +2,184 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="C971_Ogden.Pages.DetailedClass"
-             Title="DetailedClass">
-    <VerticalStackLayout>
-        <Label 
-            Text="Welcome to .NET MAUI!"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+             xmlns:controls="clr-namespace:C971_Ogden.Resources.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             Shell.PresentationMode="ModalAnimated"
+             xmlns:viewmodel="clr-namespace:C971_Ogden.ViewModel"
+             xmlns:model="clr-namespace:C971_Ogden.Database"
+             x:DataType="viewmodel:DetailedClassViewModel">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing"
+                                        Command="{Binding LoadCommand}" />
+    </ContentPage.Behaviors>
+
+
+
+    <Grid RowDefinitions="auto,auto,auto, auto, *,220">
+
+        <controls:Header Grid.Row="0" />
+
+        <VerticalStackLayout Grid.Row="1"
+                             Padding="30,5,30,0">
+            <HorizontalStackLayout>
+                <Button ImageSource="left_arrow.png"
+                        TextColor="White"
+                        BackgroundColor="Transparent"
+                        HeightRequest="45"
+                        Command="{Binding BackCommand}"/>
+                <Label  Text="{Binding SelectedClass.ClassName}"
+                        FontSize="32"
+                        TextColor="White"
+                        HorizontalOptions="Center" />
+            </HorizontalStackLayout>
+
+            <BoxView Color="White"
+                     HeightRequest="1"
+                     HorizontalOptions="Fill" />
+        </VerticalStackLayout>
+
+
+        <Grid RowDefinitions="Auto, Auto, Auto, 11"
+              ColumnDefinitions="100,75, *"
+              Grid.Row="2"
+              Padding="30,10,30,0">
+            <VerticalStackLayout>
+                <Label Text="Start"
+                       TextColor="white" />
+                <Label Text="{Binding SelectedClass.StartDate, StringFormat='{}{0:MM/dd/yyyy}'}"
+                       TextColor="Gray" />
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Column="2"
+                                 HorizontalOptions="Start">
+                <Label Text="Status"
+                       TextColor="white"/>
+                <Label Text="{Binding SelectedClass.Status}"
+                       TextColor="Gray"/>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout Grid.Row="1">
+                <Label Text="End"
+                       TextColor="white" />
+                <Label Text="{Binding SelectedClass.EndDate, StringFormat='{}{0:MM/dd/yyyy}'}"
+                       TextColor="Gray" />
+            </VerticalStackLayout>
+            <BoxView Color="White"
+                     HeightRequest="1"
+                     HorizontalOptions="Fill"
+                     Grid.Row="2"
+                     Grid.ColumnSpan="3" />
+        </Grid>
+
+
+        <VerticalStackLayout Grid.Row="3"
+                             Padding="30,0">
+            <Label Text="Instructor Information"
+                   TextColor="White"
+                   FontSize="25" />
+            <Grid RowDefinitions="Auto, Auto"
+                  ColumnDefinitions="100,75, *"
+                  RowSpacing="10">
+                <VerticalStackLayout>
+                    <Label Text="Name"
+                           TextColor="white" />
+                    <Label Text="{Binding Instructor.InstructorName}"
+                           TextColor="Gray" />
+                </VerticalStackLayout>
+
+                <VerticalStackLayout Grid.Column="2"
+                                     HorizontalOptions="FillAndExpand">
+                    <Label Text="Phone"
+                           TextColor="white"
+                           HorizontalOptions="Start"/>
+                    <Label Text="{Binding Instructor.PhoneNumber}"
+                           TextColor="Gray"
+                           HorizontalOptions="Start"/>
+                </VerticalStackLayout>
+            </Grid>
+            <VerticalStackLayout>
+                <Label Text="Email"
+                       TextColor="white" />
+                <Label Text="{Binding Instructor.Email}"
+                       TextColor="Gray" />
+                <BoxView Color="White"
+                         HeightRequest="1"
+                         HorizontalOptions="Fill"
+                         Margin="0,10,0,0" />
+            </VerticalStackLayout>
+            <Label Text="Assessment Information"
+                   TextColor="White"
+                   FontSize="25" />
+        </VerticalStackLayout>
+
+
+        <CollectionView ItemsSource="{Binding ExamList}"
+                        VerticalOptions="Fill"
+                        EmptyView="No Exams"
+                        Grid.Row="4">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate x:DataType="{x:Type model:DetailedExam}">
+                    <Grid RowDefinitions="11, Auto, Auto"
+                          ColumnDefinitions="Auto, *"
+                          Padding="30,10,30,0">
+                        <Label Text="{Binding ExamName}"
+                               TextColor="White"
+                               Grid.Row="1" />
+                        <Label Text="{Binding ExamType}"
+                               Grid.Row="2"
+                               TextColor="Gray"
+                               HorizontalOptions="End" />
+                        <Label Text="{Binding StartTime, StringFormat='{}{0:M/d/yy - h:mm tt}'}"
+                               TextColor="Gray"
+                               Grid.Row="1"
+                               Grid.Column="1"
+                               HorizontalOptions="End" />
+                        <Label Text="{Binding EndTime, StringFormat='{}{0:M/d/yy - h:mm tt}'}"
+                               TextColor="Gray"
+                               Grid.Column="1"
+                               Grid.Row="2"
+                               HorizontalOptions="End" />
+
+                        <BoxView Color="DimGray"
+                                 HeightRequest="1"
+                                 HorizontalOptions="Fill"
+                                 Grid.Row="0"
+                                 Grid.ColumnSpan="2"
+                                 VerticalOptions="Start" />
+                    </Grid>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <VerticalStackLayout Grid.Row="5"
+                             Padding="30,10,30,0">
+
+            <BoxView Color="White"
+                     HeightRequest="1" />
+            <Label Text="Notes"
+                   TextColor="White"
+                   FontSize="25" />
+            <Border Background="White"
+                    Margin="0,0,0,5">
+                <Border.StrokeShape>
+                    <RoundRectangle CornerRadius="5" />
+                </Border.StrokeShape>
+                <Editor Placeholder="Notes"
+                        Text="{Binding SelectedClass.Notes}"
+                        HeightRequest="115"
+                        VerticalTextAlignment="End"
+                        BackgroundColor="Transparent"
+                        IsReadOnly="True"
+                        MaxLength="125" />
+            </Border>
+            <Button Text="Share"
+                    BackgroundColor="{StaticResource ControlColor}"
+                    HorizontalOptions="End"
+                    HeightRequest="38"
+                    IsEnabled="{Binding NotesHasText}"
+                    Command="{Binding ShareCommand}"/>
+        </VerticalStackLayout>
+    </Grid>
 </ContentPage>
