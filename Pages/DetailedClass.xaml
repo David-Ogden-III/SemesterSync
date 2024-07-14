@@ -116,8 +116,13 @@
 
         <CollectionView ItemsSource="{Binding ExamList}"
                         VerticalOptions="Fill"
-                        EmptyView="No Exams"
                         Grid.Row="4">
+
+            <CollectionView.EmptyView>
+                <Label Text="No Exams"
+                       HorizontalOptions="Center"
+                       TextColor="Gray" />
+            </CollectionView.EmptyView>
 
             <CollectionView.ItemTemplate>
                 <DataTemplate x:DataType="{x:Type model:DetailedExam}">
@@ -131,12 +136,12 @@
                                Grid.Row="2"
                                TextColor="Gray"
                                HorizontalOptions="End" />
-                        <Label Text="{Binding StartTime, StringFormat='{}{0:M/d/yy - h:mm tt}'}"
+                        <Label Text="{Binding StartTime, StringFormat='{}{0:MM/dd/yy - h:mm tt}'}"
                                TextColor="Gray"
                                Grid.Row="1"
                                Grid.Column="1"
                                HorizontalOptions="End" />
-                        <Label Text="{Binding EndTime, StringFormat='{}{0:M/d/yy - h:mm tt}'}"
+                        <Label Text="{Binding EndTime, StringFormat='{}{0:MM/dd/yy - h:mm tt}'}"
                                TextColor="Gray"
                                Grid.Column="1"
                                Grid.Row="2"
