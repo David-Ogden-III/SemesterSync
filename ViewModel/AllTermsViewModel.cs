@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using C971_Ogden.Database;
 using System.Diagnostics;
+using CommunityToolkit.Maui.Views;
 
 namespace C971_Ogden.ViewModel;
 
@@ -16,6 +17,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
         TermEllipsisClickedCommand = new Command<ClassGroup>(execute: async (ClassGroup selectedCG) => await TermEllipsisClicked(selectedCG));
         ClassEllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await ClassEllipsisClicked(selectedClass));
     }
+    
 
     // Collections
     public ObservableCollection<ClassGroup> Classes { get; set; } = [];
@@ -80,6 +82,8 @@ public class AllTermsViewModel : INotifyPropertyChanged
 
     private async Task LoadClasses()
     {
+        LoadingPopup loadingPopup = new();
+        Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         Classes.Clear();
         List<Term> allTermResults = (await SchoolDatabase.GetAllAsync<Term>());
         ObservableCollection<ClassGroup> cg = [];
@@ -98,7 +102,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
 
             Classes.Add(new ClassGroup (term, classes));
         }
-
+        loadingPopup.Close();
     }
 
     private async Task EditClass(Class selectedClass)

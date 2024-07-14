@@ -3,6 +3,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using C971_Ogden.Database;
 using System.Diagnostics;
+using CommunityToolkit.Maui.Views;
 
 namespace C971_Ogden.ViewModel;
 
@@ -76,12 +77,16 @@ public class AllClassesViewModel : INotifyPropertyChanged
 
     private async Task LoadClasses()
     {
+        LoadingPopup loadingPopup = new();
+        Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         Classes.Clear();
 
         List<Class> dbClasses = await SchoolDatabase.GetAllAsync<Class>();
 
         foreach (Class dbClass in dbClasses)
             Classes.Add(dbClass);
+
+        loadingPopup.Close();
     }
 
     private async Task EllipsisClicked(Class selectedClass)

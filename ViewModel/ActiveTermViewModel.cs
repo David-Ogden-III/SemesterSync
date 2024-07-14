@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using C971_Ogden.Database;
 using C971_Ogden.Pages;
+using CommunityToolkit.Maui.Views;
 
 namespace C971_Ogden.ViewModel;
 
@@ -63,6 +64,8 @@ public class ActiveTermViewModel : INotifyPropertyChanged
     // Command Definitions
     public async Task LoadActiveTermAsync()
     {
+        LoadingPopup loadingPopup = new();
+        Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         ActiveClasses.Clear();
         ActiveTerm = await SchoolDatabase.GetFilteredItemAsync<Term>((term) => term.StartDate < DateTime.Now && term.EndDate > DateTime.Now);
 
@@ -77,6 +80,7 @@ public class ActiveTermViewModel : INotifyPropertyChanged
                 ActiveClasses.Add(activeClass);
             }
         }
+        loadingPopup.Close();
     }
 
     private async Task EllipsisClicked(Class selectedClass)

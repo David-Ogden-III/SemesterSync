@@ -1,6 +1,8 @@
 ﻿using System.Collections.ObjectModel;
 using System.ComponentModel;
 using C971_Ogden.Database;
+using C971_Ogden.Pages;
+using CommunityToolkit.Maui.Views;
 
 namespace C971_Ogden.ViewModel;
 
@@ -64,6 +66,8 @@ public class DetailedClassViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task Load()
     {
+        LoadingPopup loadingPopup = new();
+        Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         if (SelectedClass == null)
         {
             await Shell.Current.GoToAsync("..");
@@ -92,6 +96,7 @@ public class DetailedClassViewModel : INotifyPropertyChanged
 
             Instructor = await SchoolDatabase.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId);
         }
+        loadingPopup.Close();
     }
 
     private static async Task Back()

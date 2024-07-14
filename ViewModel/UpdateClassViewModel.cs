@@ -3,8 +3,10 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Threading;
 using C971_Ogden.Database;
+using C971_Ogden.Pages;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 
 namespace C971_Ogden.ViewModel;
 
@@ -200,6 +202,8 @@ public class UpdateClassViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task Load()
     {
+        LoadingPopup loadingPopup = new();
+        Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         if (SelectedClass != null)
         {
             Instructor = await SchoolDatabase.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId);
@@ -257,6 +261,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             StartDate = DateTime.Now;
             EndDate = DateTime.Now;
         }
+        loadingPopup.Close();
     }
 
     private static async Task Back()

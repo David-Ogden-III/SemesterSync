@@ -1,6 +1,8 @@
 ﻿using System.ComponentModel;
 using System.Diagnostics;
 using C971_Ogden.Database;
+using C971_Ogden.Pages;
+using CommunityToolkit.Maui.Views;
 
 namespace C971_Ogden.ViewModel;
 [QueryProperty(nameof(SelectedCG), "SelectedCG")]
@@ -102,6 +104,8 @@ public class TermDetailsViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task Load()
     {
+        LoadingPopup loadingPopup = new();
+        Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         var allClasses = await SchoolDatabase.GetAllAsync<Class>();
         AllClasses = allClasses.AsEnumerable();
         if (SelectedCG != null)
@@ -118,6 +122,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             StartDate = DateTime.Now;
             EndDate = DateTime.Now.AddDays(1);
         }
+        loadingPopup.Close();
     }
 
     private void SelectionChanged()
