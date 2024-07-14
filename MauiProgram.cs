@@ -28,14 +28,17 @@ namespace C971_Ogden
             builder.Services.AddSingleton<AllTerms>();
             builder.Services.AddSingleton<AllTermsViewModel>();
 
-            builder.Services.AddTransient<TermDetails>();
-            builder.Services.AddTransient<TermDetailsViewModel>();
-
             builder.Services.AddSingleton<AllClasses>();
             builder.Services.AddSingleton<AllClassesViewModel>();
 
+            builder.Services.AddTransient<TermDetails>();
+            builder.Services.AddTransient<TermDetailsViewModel>();
+
             builder.Services.AddTransient<DetailedClass>();
             builder.Services.AddTransient<DetailedClassViewModel>();
+
+            builder.Services.AddTransient<UpdateClass>();
+            builder.Services.AddTransient<UpdateClassViewModel>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
