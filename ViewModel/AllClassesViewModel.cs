@@ -13,6 +13,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
         Classes = [];
         LoadCommand = new Command(execute: async () => await LoadClasses());
         DeleteClassCommand = new Command<Class>(execute: async (Class c) => await DeleteClass(c));
+        EditClassCommand = new Command<Class>(execute: async (Class c) => await EditClass(c));
         EllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await EllipsisClicked(selectedClass));
     }
 
@@ -24,21 +25,13 @@ public class AllClassesViewModel : INotifyPropertyChanged
     public Command LoadCommand { get; }
     public Command DeleteClassCommand { get; }
     public Command EllipsisClickedCommand { get; }
+    public Command<Class> EditClassCommand { get; }
     public Command AddClassCommand { get; set; } = new(
         execute: async () =>
         {
             await Shell.Current.GoToAsync(nameof(UpdateClass));
         });
 
-    public Command<Class> EditClassCommand { get; set; } = new(
-        execute: async (Class selectedClass) =>
-        {
-            await Shell.Current.GoToAsync(nameof(UpdateClass),
-                new Dictionary<string, object>
-                {
-                {"SelectedClass", selectedClass }
-                });
-        });
 
     public Command<Class> DetailedViewCommand { get; set; } = new(
         execute: async (Class selectedClass) =>
@@ -54,37 +47,41 @@ public class AllClassesViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task DeleteClass(Class selectedClass)
     {
-        bool itemDeleted = await SchoolDatabase.DeleteItemAsync(selectedClass);
+        // Delete class from Class table
+        await SchoolDatabase.DeleteItemAsync(selectedClass);
 
+        // Delete related term schedules from TermSchedule table
+        TermSchedule termSchedule = await SchoolDatabase.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == selectedClass.Id);
+        await SchoolDatabase.DeleteItemAsync(termSchedule);
 
-        TermSchedule termSchedule = (await SchoolDatabase.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == selectedClass.Id));
-        bool termScheduleDeleted = await SchoolDatabase.DeleteItemAsync(termSchedule);
-        Debug.WriteLineIf(termScheduleDeleted, $"Deleted Class: {selectedClass.ClassName}");
+        // Delete related exams from Exam table
+        IEnumerable<Exam> examsToDelete = await SchoolDatabase.GetFilteredListAsync<Exam>(exam => exam.ClassId == selectedClass.Id);
+        foreach (Exam exam in examsToDelete)
+        {
+            await SchoolDatabase.DeleteItemAsync(exam);
+        }
 
-        if (itemDeleted)
-            Classes.Remove(selectedClass);
+        // Remove from Classes list (UI)
+        Classes.Remove(selectedClass);
     }
 
+    private async Task EditClass(Class selectedClass)
+    {
+        await Shell.Current.GoToAsync(nameof(UpdateClass),
+                new Dictionary<string, object>
+                {
+                {"SelectedClass", selectedClass }
+                });
+    }
 
     private async Task LoadClasses()
     {
-        List<Class> dbClasses = await SchoolDatabase.GetAllAsync<Class>();
-        List<Class> existingClasses = [.. Classes];
-        foreach (Class dbClass in dbClasses)
-        {
-            if (!existingClasses.Exists(existingClass => existingClass.Id == dbClass.Id))
-            {
-                Classes.Add(dbClass);
-            }
-        }
+        Classes.Clear();
 
-        foreach (Class existingClass in existingClasses)
-        {
-            if (!dbClasses.Exists((dbClass) => dbClass.Id == existingClass.Id))
-            {
-                Classes.Remove(existingClass);
-            }
-        }
+        List<Class> dbClasses = await SchoolDatabase.GetAllAsync<Class>();
+
+        foreach (Class dbClass in dbClasses)
+            Classes.Add(dbClass);
     }
 
     private async Task EllipsisClicked(Class selectedClass)
@@ -111,7 +108,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
 
 
 
-
+    // Other
     public event PropertyChangedEventHandler? PropertyChanged;
     void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
 }
