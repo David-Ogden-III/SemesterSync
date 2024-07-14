@@ -22,10 +22,18 @@
 
         <VerticalStackLayout Grid.Row="1"
                              Padding="30,5,30,0">
-            <Label x:Name="PageTitle"
-                   Text="{Binding SelectedCG.Term.TermName, FallbackValue='Add Term', TargetNullValue='Add Term'}"
-                   FontSize="32"
-                   TextColor="White" />
+            <HorizontalStackLayout>
+                <Button ImageSource="left_arrow.png"
+                        TextColor="White"
+                        BackgroundColor="Transparent"
+                        HeightRequest="45"
+                        Command="{Binding CancelClickedCommand}" />
+                <Label x:Name="PageTitle"
+                       Text="{Binding SelectedCG.Term.TermName, FallbackValue='Add Term', TargetNullValue='Add Term'}"
+                       FontSize="32"
+                       TextColor="White" />
+            </HorizontalStackLayout>
+            
             <BoxView Color="White"
                      HeightRequest="1"
                      HorizontalOptions="Fill" />
