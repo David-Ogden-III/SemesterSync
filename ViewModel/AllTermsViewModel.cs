@@ -12,6 +12,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
     {
         LoadCommand = new Command(execute: async () => await LoadClasses());
         DeleteTermCommand = new Command<ClassGroup>(execute: async (ClassGroup cg) => await DeleteTerm(cg));
+        EditClassCommand = new Command<Class>(execute: async (Class c) => await EditClass(c));
         TermEllipsisClickedCommand = new Command<ClassGroup>(execute: async (ClassGroup selectedCG) => await TermEllipsisClicked(selectedCG));
         ClassEllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await ClassEllipsisClicked(selectedClass));
     }
@@ -33,15 +34,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
         await Shell.Current.GoToAsync(nameof(TermDetails));
     });
 
-    public Command<Class> EditClassCommand { get; set; } = new(
-        execute: async (Class selectedClass) =>
-    {
-        await Shell.Current.GoToAsync(nameof(UpdateClass),
-            new Dictionary<string, object>
-            {
-                {"SelectedClass", selectedClass }
-            });
-    });
+    public Command<Class> EditClassCommand { get; }
 
     public Command<Class> DetailedClassCommand { get; set; } = new(
         execute: async (Class selectedClass) =>
@@ -68,9 +61,11 @@ public class AllTermsViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task DeleteTerm(ClassGroup selectedCG)
     {
+        // Delete Term from Terms table
             Term selectedTerm = selectedCG.Term;
             bool itemDeleted = await SchoolDatabase.DeleteItemAsync(selectedTerm);
 
+        // Delete TermSchedules associated to terms in TermSchedules table
         foreach (Class classToDelete in selectedCG)
         {
             string className = classToDelete.ClassName;
@@ -104,6 +99,15 @@ public class AllTermsViewModel : INotifyPropertyChanged
             Classes.Add(new ClassGroup (term, classes));
         }
 
+    }
+
+    private async Task EditClass(Class selectedClass)
+    {
+        await Shell.Current.GoToAsync(nameof(UpdateClass),
+            new Dictionary<string, object>
+            {
+                {"SelectedClass", selectedClass }
+            });
     }
 
     private async Task TermEllipsisClicked(ClassGroup selectedCG)
