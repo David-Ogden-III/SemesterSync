@@ -31,29 +31,17 @@
         <ContentView Padding="30,5"
                      Grid.Row="2">
             <CollectionView ItemsSource="{Binding Classes}"
-                      Margin="0,-10,0,0"
-                      SelectionMode="None"
-                      VerticalScrollBarVisibility="Never">
+                            Margin="0,-10,0,0"
+                            SelectionMode="None"
+                            VerticalScrollBarVisibility="Never">
                 <CollectionView.Header>
                     <VerticalStackLayout Margin="0,0,0,-10">
                         <Button TextColor="White"
                                 BackgroundColor="Transparent"
                                 Text="+ Add Class"
-                                Command="{Binding AddClassCommand}"/>
+                                Command="{Binding AddClassCommand}" />
                     </VerticalStackLayout>
                 </CollectionView.Header>
-
-                <CollectionView.EmptyView>
-                    <VerticalStackLayout Margin="0,5,0,0">
-                        <BoxView HeightRequest="1"
-                                 BackgroundColor="White" />
-                        <Label Text="No Classes to Display"
-                               TextColor="White"
-                               HorizontalOptions="Center"
-                               Margin="0,5,0,0"
-                               />
-                    </VerticalStackLayout>
-                </CollectionView.EmptyView>
 
                 <CollectionView.ItemTemplate>
                     <DataTemplate x:DataType="{x:Type model:Class}">
