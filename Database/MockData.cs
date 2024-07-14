@@ -113,7 +113,7 @@ public static class MockData
 
         Instructor1.InstructorName = "Anika Patel";
         Instructor1.Email = "anika.patel@strimeuniversity.edu";
-        Instructor1.PhoneNumber = "555-123-4567";
+        Instructor1.PhoneNumber = "5551234567";
 
         List<Instructor> instructors = [Instructor1];
 
@@ -144,6 +144,9 @@ public static class MockData
                 ClassList[i].Status = "Active";
             }
         }
+        ClassList[2].StartNotificationDateTime = DateTime.Now.AddMinutes(3);
+        ClassList[2].EndNotificationDateTime = DateTime.Now.AddMinutes(4);
+
 
         int rowsAdded = await SchoolDatabase.AddAllItemsAsync(ClassList);
         Debug.WriteLine($"Added {rowsAdded} rows to Class Table.");
