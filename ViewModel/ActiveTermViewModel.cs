@@ -63,47 +63,19 @@ public class ActiveTermViewModel : INotifyPropertyChanged
     // Command Definitions
     public async Task LoadActiveTermAsync()
     {
-        var activeTerm = await SchoolDatabase.GetFilteredItemAsync<Term>((term) => term.StartDate < DateTime.Now && term.EndDate > DateTime.Now);
+        ActiveClasses.Clear();
+        ActiveTerm = await SchoolDatabase.GetFilteredItemAsync<Term>((term) => term.StartDate < DateTime.Now && term.EndDate > DateTime.Now);
 
-        if (activeTerm != null)
+        ActiveTermIsNotNull = ActiveTerm != null;
+
+        if (ActiveTermIsNotNull)
         {
-            ActiveTerm = activeTerm;
-            ActiveTermIsNotNull = ActiveTerm != null;
-
-            List<TermSchedule> filteredTermSchedules = (await SchoolDatabase.GetFilteredListAsync<TermSchedule>((termSchedule) => termSchedule.TermId == activeTerm.Id)).ToList();
-            List<Class> activeClassList = [.. ActiveClasses];
-
-            if (filteredTermSchedules.Count == 0)
-            {
-                ActiveClasses.Clear();
-                return;
-            }
-
+            IEnumerable<TermSchedule> filteredTermSchedules = await SchoolDatabase.GetFilteredListAsync<TermSchedule>((termSchedule) => termSchedule.TermId == ActiveTerm.Id);
             foreach (TermSchedule termSchedule in filteredTermSchedules)
             {
-                if (!activeClassList.Exists((c) => c.Id == termSchedule.ClassId))
-                {
-                    Class activeClass = await SchoolDatabase.GetFilteredItemAsync<Class>((classActive) => classActive.Id == termSchedule.ClassId);
-                    ActiveClasses.Add(activeClass);
-                }
+                Class activeClass = await SchoolDatabase.GetFilteredItemAsync<Class>((classActive) => classActive.Id == termSchedule.ClassId);
+                ActiveClasses.Add(activeClass);
             }
-
-            if (ActiveClasses.Count != 0)
-            {
-                foreach (Class c in ActiveClasses.ToList())
-                {
-                    if (!filteredTermSchedules.Exists((ts) => ts.ClassId == c.Id))
-                    {
-                        ActiveClasses.Remove(c);
-                    }
-                }
-            }
-        }
-        else
-        {
-            ActiveTerm = null;
-            ActiveTermIsNotNull = ActiveTerm != null;
-            ActiveClasses.Clear();
         }
     }
 
