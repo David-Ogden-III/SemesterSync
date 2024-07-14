@@ -86,6 +86,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
         foreach (Class dbClass in dbClasses)
             Classes.Add(dbClass);
 
+        await Task.Delay(1000);
         loadingPopup.Close();
     }
 

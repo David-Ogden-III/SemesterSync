@@ -80,6 +80,7 @@ public class ActiveTermViewModel : INotifyPropertyChanged
                 ActiveClasses.Add(activeClass);
             }
         }
+        await Task.Delay(1000);
         loadingPopup.Close();
     }
 

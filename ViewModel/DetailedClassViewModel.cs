@@ -96,6 +96,7 @@ public class DetailedClassViewModel : INotifyPropertyChanged
 
             Instructor = await SchoolDatabase.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId);
         }
+        await Task.Delay(1000);
         loadingPopup.Close();
     }
 

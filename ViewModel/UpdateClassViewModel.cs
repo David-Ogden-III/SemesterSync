@@ -261,6 +261,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             StartDate = DateTime.Now;
             EndDate = DateTime.Now;
         }
+        await Task.Delay(1000);
         loadingPopup.Close();
     }
 

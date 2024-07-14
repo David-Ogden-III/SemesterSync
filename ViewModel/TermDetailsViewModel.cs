@@ -122,6 +122,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             StartDate = DateTime.Now;
             EndDate = DateTime.Now.AddDays(1);
         }
+        await Task.Delay(1000);
         loadingPopup.Close();
     }
 

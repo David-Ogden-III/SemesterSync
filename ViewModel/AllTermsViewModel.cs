@@ -102,6 +102,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
 
             Classes.Add(new ClassGroup (term, classes));
         }
+        await Task.Delay(1000);
         loadingPopup.Close();
     }
 
