@@ -1,8 +1,8 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using C971_Ogden.Database;
+﻿using C971_Ogden.Database;
 using C971_Ogden.Pages;
 using CommunityToolkit.Maui.Views;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace C971_Ogden.ViewModel;
 
@@ -17,7 +17,7 @@ public class DetailedClassViewModel : INotifyPropertyChanged
     }
 
     // Helper Class
-    
+
 
     // Collections
     public ObservableCollection<DetailedExam> ExamList { get; set; } = [];

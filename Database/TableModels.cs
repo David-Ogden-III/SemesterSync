@@ -34,22 +34,16 @@ public class Class
     [Column("startDate")]
     public DateTime StartDate { get; set; }
 
-    [Column("startNotificationDateTime")]
-
-    public DateTime? StartNotificationDateTime { get; set; }
 
     [Column("endDate")]
 
     public DateTime EndDate { get; set; }
 
-    [Column("endNotificationDateTime")]
-
-    public DateTime? EndNotificationDateTime { get; set; }
 
     [Column("notes")]
     public string Notes { get; set; }
 
-    [Column("instructorId"),Indexed]
+    [Column("instructorId"), Indexed]
     public int InstructorId { get; set; }
 }
 

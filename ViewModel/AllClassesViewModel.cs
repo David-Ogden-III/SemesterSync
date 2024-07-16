@@ -1,16 +1,19 @@
-﻿using C971_Ogden.Pages;
+﻿using C971_Ogden.Database;
+using C971_Ogden.Pages;
+using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
-using C971_Ogden.Database;
 using System.Diagnostics;
-using CommunityToolkit.Maui.Views;
 
 namespace C971_Ogden.ViewModel;
 
 public class AllClassesViewModel : INotifyPropertyChanged
 {
-    public AllClassesViewModel()
+    private readonly IPopupService popupService;
+    public AllClassesViewModel(IPopupService popupService)
     {
+        this.popupService = popupService;
         Classes = [];
         LoadCommand = new Command(execute: async () => await LoadClasses());
         DeleteClassCommand = new Command<Class>(execute: async (Class c) => await DeleteClass(c));
@@ -92,7 +95,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
 
     private async Task EllipsisClicked(Class selectedClass)
     {
-        string action = await Shell.Current.CurrentPage.DisplayActionSheet(selectedClass.ClassName, "Cancel", null, "Edit", "Detailed View", "Delete");
+        string action = await Shell.Current.CurrentPage.DisplayActionSheet(selectedClass.ClassName, "Cancel", null, "Edit", "Detailed View", "Set Notification", "Delete");
         Debug.WriteLine("Action: " + action);
 
         switch (action)
@@ -105,6 +108,9 @@ public class AllClassesViewModel : INotifyPropertyChanged
                 break;
             case "Detailed View":
                 DetailedViewCommand.Execute(selectedClass);
+                break;
+            case "Set Notification":
+                popupService.ShowPopup<NotificationPopupViewModel>(viewmodel => viewmodel.OnAppearing(selectedClass));
                 break;
             default:
                 Debug.WriteLine("No Action Selected");

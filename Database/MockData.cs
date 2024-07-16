@@ -76,7 +76,7 @@ public static class MockData
         "Trigonometry PA", "Algebra PA", "Spanish PA", "Intro to Python PA", "Web Fundamentals PA", "Hardware and OS PA"];
 
     private static Instructor Instructor1 { get; set; } = new();
-    
+
     private static ExamType ExamType1 { get; set; } = new();
     private static ExamType ExamType2 { get; set; } = new();
 
@@ -144,9 +144,6 @@ public static class MockData
                 ClassList[i].Status = "Active";
             }
         }
-        ClassList[2].StartNotificationDateTime = DateTime.Now.AddMinutes(3);
-        ClassList[2].EndNotificationDateTime = DateTime.Now.AddMinutes(4);
-
 
         int rowsAdded = await SchoolDatabase.AddAllItemsAsync(ClassList);
         Debug.WriteLine($"Added {rowsAdded} rows to Class Table.");
@@ -156,14 +153,14 @@ public static class MockData
     {
         await SchoolDatabase.DeleteAllItemsAsync<TermSchedule>();
 
-        for (int i = 0; i < TermScheduleList.Count;i++)
+        for (int i = 0; i < TermScheduleList.Count; i++)
         {
             TermScheduleList[i].ClassId = ClassList[i].Id;
             if (i <= 5)
             {
                 TermScheduleList[i].TermId = Term1.Id;
             }
-            else 
+            else
             {
                 TermScheduleList[i].TermId = Term2.Id;
             }
@@ -180,7 +177,7 @@ public static class MockData
         ExamType1.Type = "Objective Assessment";
         ExamType2.Type = "Performance Assessment";
 
-        List<ExamType> examList = [ExamType1,  ExamType2];
+        List<ExamType> examList = [ExamType1, ExamType2];
         int rowsAdded = await SchoolDatabase.AddAllItemsAsync(examList);
         Debug.WriteLine($"Added {rowsAdded} rows to ExamType Table.");
     }

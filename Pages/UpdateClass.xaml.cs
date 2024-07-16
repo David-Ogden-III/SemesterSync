@@ -4,9 +4,9 @@ namespace C971_Ogden.Pages;
 
 public partial class UpdateClass : ContentPage
 {
-	public UpdateClass(UpdateClassViewModel vm)
-	{
-		InitializeComponent();
-		BindingContext = vm;
-	}
+    public UpdateClass(UpdateClassViewModel vm)
+    {
+        InitializeComponent();
+        BindingContext = vm;
+    }
 }

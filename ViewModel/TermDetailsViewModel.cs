@@ -1,8 +1,8 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using C971_Ogden.Database;
+﻿using C971_Ogden.Database;
 using C971_Ogden.Pages;
 using CommunityToolkit.Maui.Views;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace C971_Ogden.ViewModel;
 [QueryProperty(nameof(SelectedCG), "SelectedCG")]
@@ -28,7 +28,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             OnPropertyChanged(nameof(AllClasses));
         }
     }
-    
+
 
 
     // Objects
@@ -185,7 +185,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
 
 
             // Update TermSchedule Table
-                // Only add classes to DB if they dont already exist
+            // Only add classes to DB if they dont already exist
             List<TermSchedule> newSchedules = [];
             foreach (Class c in SelectedCG)
             {
@@ -202,7 +202,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             int numClassesAdded = await SchoolDatabase.AddAllItemsAsync<TermSchedule>(newSchedules);
             Debug.WriteLine($"{SelectedCG.Term.TermName}: {numClassesAdded} classes added");
 
-                // Remove Classes from DB if they were no longer selected
+            // Remove Classes from DB if they were no longer selected
             List<Class> SelectedCGClasses = [.. SelectedCG];
             foreach (Class c in ClassesInDB)
             {
@@ -224,9 +224,9 @@ public class TermDetailsViewModel : INotifyPropertyChanged
         await Shell.Current.GoToAsync("..");
     }
 
-    
 
-    
+
+
 
 
 

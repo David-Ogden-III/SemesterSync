@@ -1,6 +1,4 @@
-﻿using C971_Ogden.Database;
-using C971_Ogden.ViewModel;
-using System.Diagnostics;
+﻿using C971_Ogden.ViewModel;
 
 namespace C971_Ogden.Pages;
 

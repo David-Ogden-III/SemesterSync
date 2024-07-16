@@ -1,12 +1,11 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using System.Diagnostics;
-using System.Threading;
-using C971_Ogden.Database;
+﻿using C971_Ogden.Database;
 using C971_Ogden.Pages;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
+using System.Diagnostics;
 
 namespace C971_Ogden.ViewModel;
 
@@ -14,14 +13,17 @@ namespace C971_Ogden.ViewModel;
 
 public class UpdateClassViewModel : INotifyPropertyChanged
 {
-    public UpdateClassViewModel()
+    private readonly IPopupService popupService;
+    public UpdateClassViewModel(IPopupService popupService)
     {
+        this.popupService = popupService;
         LoadCommand = new Command(execute: async () => await Load());
         BackCommand = new Command(execute: async () => await Back());
         SaveCommand = new Command(execute: async () => await Save());
         ExamEllipsisClickedCommand = new Command<DetailedExam>(execute: async (DetailedExam selectedExam) => await ExamEllipsisClicked(selectedExam));
-        EditExamCommand = new Command<DetailedExam>(execute: async (DetailedExam selectedExam) => await ExamEllipsisClicked(selectedExam));
-        DeleteExamCommand = new Command<DetailedExam>(execute: async (DetailedExam selectedExam) => await DeleteExam(selectedExam));
+        EditExamCommand = new Command<DetailedExam>(execute: async (DetailedExam selectedExam) => await EditExam(selectedExam));
+        AddExamCommand = new Command(execute: async () => await AddExam());
+        DeleteExamCommand = new Command<DetailedExam>(execute: (DetailedExam selectedExam) => DeleteExam(selectedExam));
     }
 
 
@@ -197,6 +199,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
     public Command ExamEllipsisClickedCommand { get; }
     public Command EditExamCommand { get; }
     public Command DeleteExamCommand { get; }
+    public Command AddExamCommand { get; }
 
 
     // Command Definitions
@@ -217,22 +220,6 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             InstructorEmail = Instructor.Email;
             InstructorPhoneNum = Instructor.PhoneNumber;
             SelectedStatus = StatusOptions.Find(option => option == SelectedClass.Status);
-
-            if (SelectedClass.StartNotificationDateTime != null)
-            {
-                StartNotificationDate = new DateOnly(SelectedClass.StartNotificationDateTime.Value.Year, SelectedClass.StartNotificationDateTime.Value.Month, SelectedClass.StartNotificationDateTime.Value.Day);
-                StartNotificationTime = new TimeOnly(SelectedClass.StartNotificationDateTime.Value.Hour, SelectedClass.StartNotificationDateTime.Value.Minute);
-                StartNotificationEnabled = true;
-            }
-
-            if (SelectedClass.EndNotificationDateTime != null)
-            {
-                EndNotificationDate = new DateOnly(SelectedClass.EndNotificationDateTime.Value.Year, SelectedClass.EndNotificationDateTime.Value.Month, SelectedClass.EndNotificationDateTime.Value.Day);
-                EndNotificationTime = new TimeOnly(SelectedClass.EndNotificationDateTime.Value.Hour, SelectedClass.EndNotificationDateTime.Value.Minute);
-                EndNotificationEnabled = true;
-            }
-
-
 
             List<Exam> exams = (await SchoolDatabase.GetFilteredListAsync<Exam>(exam => exam.ClassId == SelectedClass.Id)).ToList();
             if (exams.Count > 0)
@@ -309,7 +296,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
 
     private async Task ExamEllipsisClicked(DetailedExam selectedExam)
     {
-        string action = await Shell.Current.CurrentPage.DisplayActionSheet(selectedExam.ExamName, "Cancel", null, "Edit", "Delete");
+        string action = await Shell.Current.CurrentPage.DisplayActionSheet(selectedExam.ExamName, "Cancel", null, "Edit", "Delete", "Set Notification");
         Debug.WriteLine("Action: " + action);
 
         switch (action)
@@ -320,6 +307,9 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             case "Delete":
                 DeleteExamCommand.Execute(selectedExam);
                 break;
+            case "Set Notification":
+                popupService.ShowPopup<NotificationPopupViewModel>(viewmodel => viewmodel.OnAppearing(selectedExam));
+                break;
             default:
                 Debug.WriteLine("No Action Selected");
                 break;
@@ -328,27 +318,35 @@ public class UpdateClassViewModel : INotifyPropertyChanged
 
     private async Task EditExam(DetailedExam selectedExam)
     {
-        Debug.WriteLine("Edit ME!");
+        var result = await popupService.ShowPopupAsync<AddModifyExamPopupViewModel>(async viewmodel => await viewmodel.OnLoading(selectedExam));
+        if (result != null)
+        {
+            DetailedExam updatedExam = (DetailedExam)result;
+            if (updatedExam.ExamId == 0)
+            {
+                ExamList.Add(updatedExam);
+            }
+            else
+            {
+                int indexToReplace = ExamList.ToList().FindIndex(e => e.ExamId == updatedExam.ExamId);
+                ExamList[indexToReplace] = updatedExam;
+            }
+        }
     }
 
-    private async Task DeleteExam(DetailedExam selectedDetailedExam)
+    private async Task AddExam()
     {
-        // Delete Exam from Exam table
-        Exam selectedExam = new()
+        var result = await popupService.ShowPopupAsync<AddModifyExamPopupViewModel>(async viewmodel => await viewmodel.OnLoading());
+        if (result != null)
         {
-            Id = selectedDetailedExam.ExamId,
-            ExamName = selectedDetailedExam.ExamName,
-            StartTime = selectedDetailedExam.StartTime,
-            EndTime = selectedDetailedExam.EndTime,
-            ClassId = selectedDetailedExam.ClassId,
-            ExamTypeId = selectedDetailedExam.ExamTypeId
+            DetailedExam updatedExam = (DetailedExam)result;
+            ExamList.Add(updatedExam);
+        }
+    }
 
-        };
-        bool itemDeleted = await SchoolDatabase.DeleteItemAsync(selectedExam);
-
-
-        if (itemDeleted)
-            ExamList.Remove(selectedDetailedExam);
+    private void DeleteExam(DetailedExam selectedDetailedExam)
+    {
+        ExamList.Remove(selectedDetailedExam);
     }
 
 
@@ -379,20 +377,24 @@ public class UpdateClassViewModel : INotifyPropertyChanged
         List<Exam> newExams = [];
         foreach (DetailedExam detailedExam in ExamList)
         {
-            if (ExistingExamList.Exists(existingExam => existingExam.Id == detailedExam.ExamId))
-                break;
-
             Exam newExam = new()
             {
                 Id = detailedExam.ExamId,
                 ExamName = detailedExam.ExamName,
                 StartTime = detailedExam.StartTime,
                 EndTime = detailedExam.EndTime,
-                ClassId = detailedExam.ClassId,
-                ExamTypeId = detailedExam.ExamTypeId
+                ClassId = SelectedClass.Id,
+                ExamTypeId = detailedExam.ExamTypeId,
             };
+            if (newExam.Id == 0)
+            {
+                newExams.Add(newExam);
+            }
+            else
+            {
+                await SchoolDatabase.UpdateItemAsync(newExam);
+            }
 
-            newExams.Add(newExam);
         }
         await SchoolDatabase.AddAllItemsAsync(newExams);
 
@@ -403,21 +405,6 @@ public class UpdateClassViewModel : INotifyPropertyChanged
 
             await SchoolDatabase.DeleteItemAsync(existingExam);
         }
-
-        //List<Exam> newExams = [];
-        //foreach (DetailedExam detailedExam in ExamList)
-        //{
-        //    Exam newExam = new()
-        //    {
-        //        ExamName = detailedExam.ExamName,
-        //        StartTime = detailedExam.StartTime,
-        //        EndTime = detailedExam.EndTime,
-        //        ClassId = detailedExam.ClassId,
-        //        ExamTypeId = detailedExam.ExamTypeId
-        //    };
-        //    newExams.Add(newExam);
-        //}
-        //await SchoolDatabase.AddAllItemsAsync(newExams);
     }
 
     private async Task<int> GetInstructorId()
