@@ -44,6 +44,8 @@ namespace C971_Ogden
 
             builder.Services.AddTransientPopup<AddModifyExamPopup, AddModifyExamPopupViewModel>();
             builder.Services.AddTransientPopup<NotificationPopup, NotificationPopupViewModel>();
+
+            builder.Services.AddSingleton<Profile>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

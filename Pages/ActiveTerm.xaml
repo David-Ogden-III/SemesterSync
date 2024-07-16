@@ -14,8 +14,7 @@
     </ContentPage.Behaviors>
 
 
-    <Grid RowDefinitions="auto,auto,*"
-          Grid.Row="0">
+    <Grid RowDefinitions="auto,auto,*">
         <controls:Header Grid.Row="0" />
 
         <VerticalStackLayout Grid.Row="1"
