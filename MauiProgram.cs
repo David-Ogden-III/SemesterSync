@@ -3,6 +3,7 @@ using C971_Ogden.Pages;
 using C971_Ogden.ViewModel;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
+using Plugin.LocalNotification;
 
 namespace C971_Ogden
 {
@@ -18,7 +19,8 @@ namespace C971_Ogden
                     fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
                     fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
                 })
-                .UseMauiCommunityToolkit();
+                .UseMauiCommunityToolkit()
+                .UseLocalNotification();
 
             Task.Run(async () => await MockData.CreateAllMockData());
 
@@ -39,6 +41,9 @@ namespace C971_Ogden
 
             builder.Services.AddTransient<UpdateClass>();
             builder.Services.AddTransient<UpdateClassViewModel>();
+
+            builder.Services.AddTransientPopup<AddModifyExamPopup, AddModifyExamPopupViewModel>();
+            builder.Services.AddTransientPopup<NotificationPopup, NotificationPopupViewModel>();
 #if DEBUG
             builder.Logging.AddDebug();
 #endif
