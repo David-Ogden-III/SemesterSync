@@ -358,9 +358,20 @@ public class UpdateClassViewModel : INotifyPropertyChanged
         bool instructorNameIsValid = InstructorName.Length > 0;
         bool instructorPhoneNumIsValid = InstructorPhoneNum.Length > 0;
         bool instructorEmailIsValid = InstructorEmail.Length > 0;
+        bool startLessThanEnd = StartDate < EndDate;
 
         bool allInputsValid = classNameIsValid && selectedStatusIsValid && instructorNameIsValid && instructorPhoneNumIsValid && instructorEmailIsValid;
 
+        if (!startLessThanEnd)
+        {
+            allInputsValid = false;
+
+            string toastText = "End date must be after start date";
+            var toast = Toast.Make(toastText);
+
+            await toast.Show(cancellationTokenSource.Token);
+            return allInputsValid;
+        }
         if (!allInputsValid)
         {
             string toastText = "Fields with * are required";
@@ -369,6 +380,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             await toast.Show(cancellationTokenSource.Token);
             return allInputsValid;
         }
+        
         return allInputsValid;
     }
 

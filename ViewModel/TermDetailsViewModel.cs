@@ -1,5 +1,6 @@
 ﻿using C971_Ogden.Database;
 using C971_Ogden.Pages;
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -144,6 +145,28 @@ public class TermDetailsViewModel : INotifyPropertyChanged
 
     private async Task Save()
     {
+        bool startLessThanEnd = StartDate < EndDate;
+        if (!startLessThanEnd)
+        {
+            string toastText = "End date must be after start date";
+            var toast = Toast.Make(toastText);
+
+            await toast.Show(cancellationTokenSource.Token);
+
+            return;
+        }
+        if (TermName.Length <= 0)
+        {
+            string toastText = "Term Name is Required";
+            var toast = Toast.Make(toastText);
+
+            await toast.Show(cancellationTokenSource.Token);
+
+            return;
+        }
+        
+
+
         if (SelectedCG?.Term.Id == 0) // 0 is default for unassigned int. AKA Add Term clicked, not edit term clicked on last page
         {
             SelectedCG.Term.TermName = TermName;
@@ -232,4 +255,5 @@ public class TermDetailsViewModel : INotifyPropertyChanged
 
     public event PropertyChangedEventHandler? PropertyChanged;
     void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+    CancellationTokenSource cancellationTokenSource = new();
 }

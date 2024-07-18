@@ -1,4 +1,5 @@
 ﻿using C971_Ogden.Database;
+using CommunityToolkit.Maui.Alerts;
 using System.ComponentModel;
 
 namespace C971_Ogden.ViewModel;
@@ -97,8 +98,30 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
         ExamTypes = await SchoolDatabase.GetAllAsync<ExamType>();
     }
 
-    public DetailedExam? Save()
+    public async Task<DetailedExam?> Save()
     {
+        bool startLessThanEnd = new DateTime(DateOnly.FromDateTime(StartDate), TimeOnly.FromTimeSpan(StartTime)) < new DateTime(DateOnly.FromDateTime(EndDate), TimeOnly.FromTimeSpan(EndTime));
+
+        if (!startLessThanEnd)
+        {
+            
+            string toastText = "End date must be after start date";
+            var toast = Toast.Make(toastText);
+
+            await toast.Show(cancellationTokenSource.Token);
+
+            return null;
+        }
+        if (ExamName.Length <= 0)
+        {
+            string toastText = "Exam Name is Required";
+            var toast = Toast.Make(toastText);
+
+            await toast.Show(cancellationTokenSource.Token);
+
+            return null;
+        }
+
         SelectedExam ??= new(new Exam(), "")
         {
             ExamName = String.Empty
@@ -144,6 +167,8 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
     // Other
     public event PropertyChangedEventHandler? PropertyChanged;
     void OnPropertyChanged(string name) => PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+
+    CancellationTokenSource cancellationTokenSource = new();
 
     // fields
     private string _popupTitle = "Add Exam";

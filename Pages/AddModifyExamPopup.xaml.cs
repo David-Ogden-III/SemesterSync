@@ -21,7 +21,8 @@ public partial class AddModifyExamPopup : Popup
 
     public async void Save_Clicked(object? sender, EventArgs e)
     {
-        DetailedExam? exam = vm.Save();
+        DetailedExam? exam = await vm.Save();
+        if (exam == null) return;
         var cts = new CancellationTokenSource(TimeSpan.FromSeconds(5));
         await CloseAsync(exam, cts.Token);
     }
