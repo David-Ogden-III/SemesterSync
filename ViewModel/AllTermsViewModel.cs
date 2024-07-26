@@ -1,6 +1,7 @@
 ﻿using C971_Ogden.Database;
 using C971_Ogden.Pages;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -18,14 +19,36 @@ public class AllTermsViewModel : INotifyPropertyChanged
         DeleteTermCommand = new Command<ClassGroup>(execute: async (ClassGroup cg) => await DeleteTerm(cg));
         EditClassCommand = new Command<Class>(execute: async (Class c) => await EditClass(c));
         DeleteClassCommand = new Command<Class>(execute: async (Class c) => await DeleteClass(c));
+        FilterTermsCommand = new Command(execute: () => FilterTerms());
         TermEllipsisClickedCommand = new Command<ClassGroup>(execute: async (ClassGroup selectedCG) => await TermEllipsisClicked(selectedCG));
         ClassEllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await ClassEllipsisClicked(selectedClass));
     }
 
 
     // Collections
-    public ObservableCollection<ClassGroup> Classes { get; set; } = [];
+    private ObservableCollection<ClassGroup> _classes = [];
+    public ObservableCollection<ClassGroup> Classes
+    {
+        get => _classes;
+        set
+        {
+            _classes = value;
+            OnPropertyChanged(nameof(Classes));
+        }
+    }
+    public List<ClassGroup> ClassesSourceOfTruth { get; set; } = [];
 
+
+    private string _searchParams = "";
+    public string SearchParams
+    {
+        get => _searchParams;
+        set
+        {
+            _searchParams = value;
+            OnPropertyChanged(nameof(SearchParams));
+        }
+    }
 
     // Commands
     public Command LoadCommand { get; }
@@ -34,6 +57,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
 
     public Command TermEllipsisClickedCommand { get; }
     public Command ClassEllipsisClickedCommand { get; }
+    public Command FilterTermsCommand { get; }
 
     public Command AddTermCommand { get; set; } = new(
         execute: async () =>
@@ -82,7 +106,15 @@ public class AllTermsViewModel : INotifyPropertyChanged
         }
 
         if (itemDeleted)
+        {
             Classes.Remove(selectedCG);
+
+            ClassGroup? cgToDelete = ClassesSourceOfTruth.Find(cg => cg.Term.Id == selectedCG.Term.Id);
+            if (cgToDelete != null)
+            {
+                ClassesSourceOfTruth.Remove(cgToDelete);
+            }
+        }
     }
 
     private async Task LoadClasses()
@@ -90,6 +122,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
         LoadingPopup loadingPopup = new();
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         Classes.Clear();
+        ClassesSourceOfTruth.Clear();
         List<Term> allTermResults = (await SchoolDatabase.GetAllAsync<Term>());
         ObservableCollection<ClassGroup> cg = [];
 
@@ -106,6 +139,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
             }
 
             Classes.Add(new ClassGroup(term, classes));
+            ClassesSourceOfTruth.Add(new ClassGroup(term, classes));
         }
         await Task.Delay(1000);
         loadingPopup.Close();
@@ -133,6 +167,29 @@ public class AllTermsViewModel : INotifyPropertyChanged
                 cg.Remove(foundClass);
                 break;
             }
+        }
+        foreach (ClassGroup cg in ClassesSourceOfTruth)
+        {
+            Class? foundClass = cg.ToList().Find(c => c.Id == selectedClass.Id);
+            if (foundClass != null)
+            {
+                cg.Remove(foundClass);
+                break;
+            }
+        }
+    }
+
+    private void FilterTerms()
+    {
+        if (String.IsNullOrWhiteSpace(SearchParams))
+        {
+            Classes = ClassesSourceOfTruth.ToObservableCollection<ClassGroup>();
+        }
+        else
+        {
+            string param = SearchParams.ToLower().Trim();
+            var result = Classes.Where(c => c.Term.TermName.ToLower().Trim().Contains(param) || c.ToList().Exists(cl => cl.ClassName.ToLower().Trim().Contains(param)));
+            Classes = result.ToObservableCollection<ClassGroup>();
         }
     }
 

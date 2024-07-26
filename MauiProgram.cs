@@ -4,6 +4,7 @@ using C971_Ogden.ViewModel;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Plugin.LocalNotification;
+using Plugin.Maui.Biometric;
 
 namespace C971_Ogden
 {
@@ -46,6 +47,8 @@ namespace C971_Ogden
             builder.Services.AddTransientPopup<NotificationPopup, NotificationPopupViewModel>();
 
             builder.Services.AddSingleton<Profile>();
+
+            builder.Services.AddSingleton<IBiometric>(BiometricAuthenticationService.Default);
 #if DEBUG
             builder.Logging.AddDebug();
 #endif

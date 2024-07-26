@@ -1,6 +1,7 @@
 ﻿using C971_Ogden.Database;
 using C971_Ogden.Pages;
 using CommunityToolkit.Maui.Core;
+using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -14,16 +15,38 @@ public class AllClassesViewModel : INotifyPropertyChanged
     public AllClassesViewModel(IPopupService popupService)
     {
         this.popupService = popupService;
-        Classes = [];
+        ClassesSourceOfTruth = [];
         LoadCommand = new Command(execute: async () => await LoadClasses());
         DeleteClassCommand = new Command<Class>(execute: async (Class c) => await DeleteClass(c));
         EditClassCommand = new Command<Class>(execute: async (Class c) => await EditClass(c));
+        FilterClassesCommand = new Command(execute: () => FilterClasses());
         EllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await EllipsisClicked(selectedClass));
     }
 
     // Collections
-    public ObservableCollection<Class> Classes { get; set; }
+    private ObservableCollection<Class> _classes = [];
+    public ObservableCollection<Class> Classes
+    {
+        get => _classes;
+        set
+        {
+            _classes = value;
+            OnPropertyChanged(nameof(Classes));
+        }
+    }
+    public List<Class> ClassesSourceOfTruth { get; set; }
 
+
+    private string _searchParams = "";
+    public string SearchParams
+    {
+        get => _searchParams;
+        set
+        {
+            _searchParams = value;
+            OnPropertyChanged(nameof(SearchParams));
+        }
+    }
 
     // Commands
     public Command LoadCommand { get; }
@@ -35,6 +58,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
         {
             await Shell.Current.GoToAsync(nameof(UpdateClass));
         });
+    public Command FilterClassesCommand { get; }
 
 
     public Command<Class> DetailedViewCommand { get; set; } = new(
@@ -67,6 +91,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
 
         // Remove from Classes list (UI)
         Classes.Remove(selectedClass);
+        ClassesSourceOfTruth.Remove(selectedClass);
     }
 
     private async Task EditClass(Class selectedClass)
@@ -83,11 +108,16 @@ public class AllClassesViewModel : INotifyPropertyChanged
         LoadingPopup loadingPopup = new();
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         Classes.Clear();
+        ClassesSourceOfTruth.Clear();
 
         List<Class> dbClasses = await SchoolDatabase.GetAllAsync<Class>();
 
         foreach (Class dbClass in dbClasses)
+        {
             Classes.Add(dbClass);
+            ClassesSourceOfTruth.Add(dbClass);
+        }
+            
 
         await Task.Delay(1000);
         loadingPopup.Close();
@@ -115,6 +145,19 @@ public class AllClassesViewModel : INotifyPropertyChanged
             default:
                 Debug.WriteLine("No Action Selected");
                 break;
+        }
+    }
+    private void FilterClasses()
+    {
+        if (String.IsNullOrWhiteSpace(SearchParams))
+        {
+            Classes = ClassesSourceOfTruth.ToObservableCollection<Class>();
+        }
+        else
+        {
+            string param = SearchParams.ToLower().Trim();
+            var result = Classes.Where(c => c.ClassName.ToLower().Trim().Contains(param));
+            Classes = result.ToObservableCollection<Class>();
         }
     }
 

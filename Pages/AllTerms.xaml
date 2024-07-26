@@ -14,11 +14,27 @@
     </ContentPage.Behaviors>
 
 
-    <Grid RowDefinitions="auto,auto,*">
+    <Grid RowDefinitions="auto,auto,auto, *">
         <controls:Header Grid.Row="0" />
 
+        <ContentView Grid.Row="1"
+                     Padding="30,5,30,0">
+            <Border StrokeShape="RoundRectangle 30,30,30,30"
+                    StrokeThickness="1"
+                    Stroke="Transparent">
+                <SearchBar Placeholder="Search Terms"
+                           BackgroundColor="White"
+                           Text="{Binding SearchParams}"
+                           HeightRequest="35">
+                    <SearchBar.Behaviors>
+                        <toolkit:EventToCommandBehavior EventName="TextChanged"
+                                                        Command="{Binding FilterTermsCommand}" />
+                    </SearchBar.Behaviors>
+                </SearchBar>
+            </Border>
+        </ContentView>
 
-        <VerticalStackLayout Grid.Row="1"
+        <VerticalStackLayout Grid.Row="2"
                              Padding="30,5,30,0"
                              Margin="0,0,0,5">
             <Label Text="All Terms"
@@ -30,7 +46,7 @@
         </VerticalStackLayout>
 
         <ContentView Padding="30,5"
-                     Grid.Row="2">
+                     Grid.Row="3">
             <ListView HasUnevenRows="True"
                       ItemsSource="{Binding Classes}"
                       IsGroupingEnabled="True"
