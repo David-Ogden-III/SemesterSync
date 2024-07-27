@@ -1,6 +1,6 @@
 using CommunityToolkit.Maui.Views;
 
-namespace C971_Ogden.Pages;
+namespace C971_Ogden.Views;
 
 public partial class LoadingPopup : Popup
 {

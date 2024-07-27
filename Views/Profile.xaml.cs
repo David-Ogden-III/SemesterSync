@@ -1,4 +1,4 @@
-namespace C971_Ogden.Pages;
+namespace C971_Ogden.Views;
 
 public partial class Profile : ContentPage
 {

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="C971_Ogden.Views.Login"
+             xmlns:controls="clr-namespace:C971_Ogden.Resources.Controls"
+             xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:viewmodel="clr-namespace:C971_Ogden.ViewModel"
+             xmlns:model="clr-namespace:C971_Ogden.Database"
+             x:DataType="viewmodel:LoginViewModel">
+
+    <ContentPage.Behaviors>
+        <toolkit:EventToCommandBehavior EventName="Appearing"
+                                        Command="{Binding LoadCommand}" />
+    </ContentPage.Behaviors>
+
+    <Grid RowDefinitions="2*, *, 2*">
+        <VerticalStackLayout Grid.Row="1">
+            <Border
+                Background="{StaticResource ControlBackground}"
+                Stroke="White"
+                StrokeShape="Ellipses"
+                WidthRequest="100"
+                HeightRequest="100">
+                <Button ImageSource="face_id.png"
+                        BackgroundColor="{StaticResource ControlColor}"
+                        Command="{Binding LoginCommand}"
+                        VerticalOptions="CenterAndExpand" />
+            </Border>
+        </VerticalStackLayout>
+    </Grid>
+    
+</ContentPage>
