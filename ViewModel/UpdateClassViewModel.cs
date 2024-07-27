@@ -1,5 +1,5 @@
 ﻿using C971_Ogden.Database;
-using C971_Ogden.Pages;
+using C971_Ogden.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
@@ -205,6 +205,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task Load()
     {
+        await Task.Delay(50);
         LoadingPopup loadingPopup = new();
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         if (SelectedClass != null)
@@ -248,7 +249,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             StartDate = DateTime.Now;
             EndDate = DateTime.Now;
         }
-        await Task.Delay(1000);
+        await Task.Delay(250);
         loadingPopup.Close();
     }
 

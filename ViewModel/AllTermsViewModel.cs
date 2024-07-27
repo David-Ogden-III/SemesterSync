@@ -1,5 +1,5 @@
 ﻿using C971_Ogden.Database;
-using C971_Ogden.Pages;
+using C971_Ogden.Views;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Views;
@@ -119,6 +119,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
 
     private async Task LoadClasses()
     {
+        await Task.Delay(50);
         LoadingPopup loadingPopup = new();
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         Classes.Clear();
@@ -141,7 +142,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
             Classes.Add(new ClassGroup(term, classes));
             ClassesSourceOfTruth.Add(new ClassGroup(term, classes));
         }
-        await Task.Delay(1000);
+        await Task.Delay(250);
         loadingPopup.Close();
     }
 

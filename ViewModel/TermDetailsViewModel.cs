@@ -1,5 +1,5 @@
 ﻿using C971_Ogden.Database;
-using C971_Ogden.Pages;
+using C971_Ogden.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
 using System.ComponentModel;
@@ -105,6 +105,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task Load()
     {
+        await Task.Delay(50);
         LoadingPopup loadingPopup = new();
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         var allClasses = await SchoolDatabase.GetAllAsync<Class>();
@@ -123,7 +124,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             StartDate = DateTime.Now;
             EndDate = DateTime.Now.AddDays(1);
         }
-        await Task.Delay(1000);
+        await Task.Delay(250);
         loadingPopup.Close();
     }
 

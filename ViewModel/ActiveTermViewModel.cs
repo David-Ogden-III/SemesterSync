@@ -1,5 +1,5 @@
 ﻿using C971_Ogden.Database;
-using C971_Ogden.Pages;
+using C971_Ogden.Views;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
@@ -71,6 +71,8 @@ public class ActiveTermViewModel : INotifyPropertyChanged
     // Command Definitions
     public async Task LoadActiveTermAsync()
     {
+        
+        await Task.Delay(50);
         LoadingPopup loadingPopup = new();
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         ActiveClasses.Clear();
@@ -87,7 +89,7 @@ public class ActiveTermViewModel : INotifyPropertyChanged
                 ActiveClasses.Add(activeClass);
             }
         }
-        await Task.Delay(1000);
+        await Task.Delay(250);
         loadingPopup.Close();
     }
 
