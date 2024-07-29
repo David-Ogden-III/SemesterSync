@@ -1,6 +1,6 @@
-﻿using C971_Ogden.Pages;
+﻿using SemesterSync.Views;
 
-namespace C971_Ogden
+namespace SemesterSync
 {
     public partial class AppShell : Shell
     {

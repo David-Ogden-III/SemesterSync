@@ -1,4 +1,4 @@
-namespace C971_Ogden.Resources.Controls;
+namespace SemesterSync.Resources.Controls;
 
 public partial class Header : CollectionView
 {

@@ -1,7 +1,7 @@
 ﻿using SQLite;
 using System.Linq.Expressions;
 
-namespace C971_Ogden.Database;
+namespace SemesterSync.Database;
 
 public static class SchoolDatabase
 {

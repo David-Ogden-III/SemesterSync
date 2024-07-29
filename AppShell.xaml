@@ -1,22 +1,24 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <Shell
-    x:Class="C971_Ogden.AppShell"
+    x:Class="SemesterSync.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:tk="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-    xmlns:local="clr-namespace:C971_Ogden.Pages"
+    xmlns:local="clr-namespace:SemesterSync.Views"
     Shell.FlyoutBehavior="Disabled"
-    Title="C971_Ogden">
+    Title="SemesterSync">
 
     <Shell.Behaviors>
         <tk:StatusBarBehavior StatusBarColor="{StaticResource ControlColor}" />
     </Shell.Behaviors>
 
+    <ShellContent ContentTemplate="{DataTemplate local:Login}"
+                  Route="Login" />
     <TabBar>
         <ShellContent
             Title="Active Term"
             ContentTemplate="{DataTemplate local:ActiveTerm}"
-            Route="MainPage" />
+            Route="ActiveTerm" />
         <ShellContent
             Title="Terms"
             ContentTemplate="{DataTemplate local:AllTerms}"

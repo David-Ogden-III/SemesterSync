@@ -1,5 +1,5 @@
-using C971_Ogden.ViewModel;
-namespace C971_Ogden.Views;
+using SemesterSync.ViewModel;
+namespace SemesterSync.Views;
 
 
 public partial class Login : ContentPage

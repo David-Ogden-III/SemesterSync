@@ -1,4 +1,4 @@
-namespace C971_Ogden.Views;
+namespace SemesterSync.Views;
 
 public partial class Profile : ContentPage
 {

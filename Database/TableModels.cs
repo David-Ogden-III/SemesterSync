@@ -1,7 +1,7 @@
 ﻿using SQLite;
 using System.Collections.ObjectModel;
 
-namespace C971_Ogden.Database;
+namespace SemesterSync.Database;
 
 [Table("Terms")]
 public class Term

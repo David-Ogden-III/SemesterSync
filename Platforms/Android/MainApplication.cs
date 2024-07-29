@@ -1,7 +1,7 @@
 ﻿using Android.App;
 using Android.Runtime;
 
-namespace C971_Ogden
+namespace SemesterSync
 {
     [Application]
     public class MainApplication : MauiApplication

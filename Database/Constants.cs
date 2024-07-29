@@ -1,4 +1,4 @@
-﻿namespace C971_Ogden;
+﻿namespace SemesterSync;
 
 public static class Constants
 {

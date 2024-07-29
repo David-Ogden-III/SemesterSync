@@ -1,9 +1,9 @@
-﻿using C971_Ogden.Database;
+﻿using SemesterSync.Database;
 using Plugin.LocalNotification;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace C971_Ogden.ViewModel;
+namespace SemesterSync.ViewModel;
 
 public class NotificationPopupViewModel : INotifyPropertyChanged
 {

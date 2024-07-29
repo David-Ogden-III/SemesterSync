@@ -1,4 +1,4 @@
-﻿namespace C971_Ogden.ViewModel;
+﻿namespace SemesterSync.ViewModel;
 
 public class ProfileViewModel
 {

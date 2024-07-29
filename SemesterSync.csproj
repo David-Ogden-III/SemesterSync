@@ -13,17 +13,17 @@
 		<!-- For example: <RuntimeIdentifiers>maccatalyst-x64;maccatalyst-arm64</RuntimeIdentifiers> -->
 
 		<OutputType>Exe</OutputType>
-		<RootNamespace>C971_Ogden</RootNamespace>
+		<RootNamespace>SemesterSync</RootNamespace>
 		<UseMaui>true</UseMaui>
 		<SingleProject>true</SingleProject>
 		<ImplicitUsings>enable</ImplicitUsings>
 		<Nullable>enable</Nullable>
 
 		<!-- Display name -->
-		<ApplicationTitle>C971_Ogden</ApplicationTitle>
+		<ApplicationTitle>SemesterSync</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.c971_ogden</ApplicationId>
+		<ApplicationId>com.companyname.SemesterSync</ApplicationId>
 
 		<!-- Versions -->
 		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
@@ -53,6 +53,9 @@
 	<ItemGroup>
 	  <None Remove="Resources\Images\chevron_down.svg" />
 	  <None Remove="Resources\Images\ellipsis.svg" />
+	  <None Remove="Resources\Images\face_id.svg" />
+	  <None Remove="Resources\Images\fingerprint.svg" />
+	  <None Remove="Resources\Images\keypad.svg" />
 	  <None Remove="Resources\Images\left_arrow.svg" />
 	  <None Remove="Resources\Images\x_mark.svg" />
 	</ItemGroup>
@@ -69,19 +72,22 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\TermDetails.xaml.cs">
+	  <Compile Update="Views\Login.xaml.cs">
+	    <DependentUpon>Login.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Views\TermDetails.xaml.cs">
 	    <DependentUpon>TermDetails.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\AllTerms.xaml.cs">
+	  <Compile Update="Views\AllTerms.xaml.cs">
 	    <DependentUpon>AllTerms.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\ActiveTerm.xaml.cs">
+	  <Compile Update="Views\ActiveTerm.xaml.cs">
 	    <DependentUpon>ActiveTerm.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\AllClasses.xaml.cs">
+	  <Compile Update="Views\AllClasses.xaml.cs">
 	    <DependentUpon>AllClasses.xaml</DependentUpon>
 	  </Compile>
-	  <Compile Update="Pages\UpdateClass.xaml.cs">
+	  <Compile Update="Views\UpdateClass.xaml.cs">
 	    <DependentUpon>UpdateClass.xaml</DependentUpon>
 	  </Compile>
 	</ItemGroup>
@@ -90,31 +96,34 @@
 	  <MauiXaml Update="LoadingPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\AddModifyExamPopup.xaml">
+	  <MauiXaml Update="Views\AddModifyExamPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\DetailedClass.xaml">
+	  <MauiXaml Update="Views\DetailedClass.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\LoadingPopup.xaml">
+	  <MauiXaml Update="Views\LoadingPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\NotificationPopup.xaml">
+	  <MauiXaml Update="Views\Login.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\TermDetails.xaml">
+	  <MauiXaml Update="Views\NotificationPopup.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\AllTerms.xaml">
+	  <MauiXaml Update="Views\TermDetails.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\AllClasses.xaml">
+	  <MauiXaml Update="Views\AllTerms.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\Profile.xaml">
+	  <MauiXaml Update="Views\AllClasses.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
-	  <MauiXaml Update="Pages\UpdateClass.xaml">
+	  <MauiXaml Update="Views\Profile.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Views\UpdateClass.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	  <MauiXaml Update="Resources\Controls\Header.xaml">

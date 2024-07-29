@@ -1,12 +1,12 @@
-﻿using C971_Ogden.Database;
-using C971_Ogden.Pages;
-using C971_Ogden.ViewModel;
+﻿using SemesterSync.Database;
+using SemesterSync.Views;
+using SemesterSync.ViewModel;
 using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Plugin.LocalNotification;
 using Plugin.Maui.Biometric;
 
-namespace C971_Ogden
+namespace SemesterSync
 {
     public static class MauiProgram
     {
@@ -24,6 +24,9 @@ namespace C971_Ogden
                 .UseLocalNotification();
 
             Task.Run(async () => await MockData.CreateAllMockData());
+
+            builder.Services.AddSingleton<Login>();
+            builder.Services.AddSingleton<LoginViewModel>();
 
             builder.Services.AddSingleton<ActiveTerm>();
             builder.Services.AddSingleton<ActiveTermViewModel>();

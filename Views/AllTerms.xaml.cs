@@ -1,6 +1,6 @@
-using C971_Ogden.ViewModel;
+using SemesterSync.ViewModel;
 
-namespace C971_Ogden.Views;
+namespace SemesterSync.Views;
 
 public partial class AllTerms : ContentPage
 {

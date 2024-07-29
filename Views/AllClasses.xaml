@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="C971_Ogden.Views.AllClasses"
-             xmlns:controls="clr-namespace:C971_Ogden.Resources.Controls"
+             x:Class="SemesterSync.Views.AllClasses"
+             xmlns:controls="clr-namespace:SemesterSync.Resources.Controls"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
-             xmlns:viewmodel="clr-namespace:C971_Ogden.ViewModel"
-             xmlns:model="clr-namespace:C971_Ogden.Database"
+             xmlns:viewmodel="clr-namespace:SemesterSync.ViewModel"
+             xmlns:model="clr-namespace:SemesterSync.Database"
              x:DataType="viewmodel:AllClassesViewModel">
 
     <ContentPage.Behaviors>

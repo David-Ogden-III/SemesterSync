@@ -1,5 +1,5 @@
-﻿using C971_Ogden.Database;
-using C971_Ogden.Views;
+﻿using SemesterSync.Database;
+using SemesterSync.Views;
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
@@ -7,7 +7,7 @@ using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
-namespace C971_Ogden.ViewModel;
+namespace SemesterSync.ViewModel;
 
 [QueryProperty(nameof(SelectedClass), "SelectedClass")]
 

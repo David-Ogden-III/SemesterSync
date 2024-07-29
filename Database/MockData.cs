@@ -1,6 +1,6 @@
 ﻿using System.Diagnostics;
 
-namespace C971_Ogden.Database;
+namespace SemesterSync.Database;
 
 public static class MockData
 {

@@ -1,8 +1,8 @@
-using C971_Ogden.Database;
-using C971_Ogden.ViewModel;
+using SemesterSync.Database;
+using SemesterSync.ViewModel;
 using CommunityToolkit.Maui.Views;
 
-namespace C971_Ogden.Views;
+namespace SemesterSync.Views;
 
 public partial class AddModifyExamPopup : Popup
 {

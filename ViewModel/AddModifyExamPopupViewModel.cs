@@ -1,8 +1,8 @@
-﻿using C971_Ogden.Database;
+﻿using SemesterSync.Database;
 using CommunityToolkit.Maui.Alerts;
 using System.ComponentModel;
 
-namespace C971_Ogden.ViewModel;
+namespace SemesterSync.ViewModel;
 
 public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 {
