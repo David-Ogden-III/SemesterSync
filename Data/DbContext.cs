@@ -1,23 +1,57 @@
 ﻿using SQLite;
 using System.Linq.Expressions;
+using SemesterSync.Models;
 
-namespace SemesterSync.Database;
+namespace SemesterSync.Data;
 
-public static class SchoolDatabase
+public static class DbContext
 {
     private static SQLiteAsyncConnection? db = null;
+
+    public const string DatabaseFilename = "WGUScheduler.db3";
+
+    public const SQLiteOpenFlags Flags =
+        // open the database in read/write mode
+        SQLiteOpenFlags.ReadWrite |
+        // create the database if it doesn't exist
+        SQLiteOpenFlags.Create |
+        // enable multi-threaded database access
+        SQLiteOpenFlags.SharedCache;
+
+    public static string DatabasePath =>
+        Path.Combine(FileSystem.AppDataDirectory, DatabaseFilename);
+
+
     private static async Task Init()
     {
         if (db != null)
             return;
 
-        db = new SQLiteAsyncConnection(Constants.DatabasePath, Constants.Flags);
+        db = new SQLiteAsyncConnection(DatabasePath, Flags);
         await db.CreateTableAsync<Term>();
         await db.CreateTableAsync<Class>();
         await db.CreateTableAsync<TermSchedule>();
         await db.CreateTableAsync<Instructor>();
         await db.CreateTableAsync<Exam>();
         await db.CreateTableAsync<ExamType>();
+        await db.CreateTableAsync<User>();
+        await InsertExamTypes();
+        
+    }
+
+    private static async Task InsertExamTypes()
+    {
+        var table = db.Table<ExamType>();
+        List<ExamType> examTypesResult = await table.ToListAsync();
+
+        if (examTypesResult.Count == 0)
+        {
+            ExamType oa = new ExamType() { Type = "Objective Assessment" };
+            ExamType pa = new ExamType() { Type = "Performance Assessment" };
+            List<ExamType> examTypes = [oa, pa];
+
+            await db.InsertAllAsync(examTypes);
+        }
     }
 
     private static async Task<AsyncTableQuery<TTable>> GetTableAsync<TTable>() where TTable : class, new()

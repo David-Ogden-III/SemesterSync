@@ -1,6 +1,8 @@
 ﻿using System.Diagnostics;
+using SemesterSync.Models;
+using SemesterSync.Services;
 
-namespace SemesterSync.Database;
+namespace SemesterSync.Data;
 
 public static class MockData
 {
@@ -80,6 +82,8 @@ public static class MockData
     private static ExamType ExamType1 { get; set; } = new();
     private static ExamType ExamType2 { get; set; } = new();
 
+    private static UserDTO User1 { get; set; } = new("David", "Ogden", "davidogden@email.com", "555-555-555", "software engineering", new DateTime(2024, 08, 31), "password");
+
     public static async Task CreateAllMockData()
     {
         await CreateTerms();
@@ -88,48 +92,53 @@ public static class MockData
         await CreateTermSchedules();
         await CreateExamTypes();
         await CreateExams();
+        await CreateUser();
     }
 
     private static async Task CreateTerms()
     {
-        await SchoolDatabase.DeleteAllItemsAsync<Term>();
+        await DbContext.DeleteAllItemsAsync<Term>();
 
         Term1.TermName = "Spring Term";
         Term1.StartDate = new DateTime(2024, 01, 01);
         Term1.EndDate = new DateTime(2024, 06, 30);
+        Term1.CreatedBy = "davidogden@email.com";
 
         Term2.TermName = "Fall Term";
         Term2.StartDate = new DateTime(2024, 07, 01);
         Term2.EndDate = new DateTime(2024, 12, 31);
+        Term2.CreatedBy = "davidogden@email.com";
 
         List<Term> terms = [Term1, Term2];
-        int rowsAdded = await SchoolDatabase.AddAllItemsAsync(terms);
+        int rowsAdded = await DbContext.AddAllItemsAsync(terms);
         Debug.WriteLine($"Added {rowsAdded} rows to Term Table.");
     }
 
     private static async Task CreateInstructors()
     {
-        await SchoolDatabase.DeleteAllItemsAsync<Instructor>();
+        await DbContext.DeleteAllItemsAsync<Instructor>();
 
         Instructor1.InstructorName = "Anika Patel";
         Instructor1.Email = "anika.patel@strimeuniversity.edu";
         Instructor1.PhoneNumber = "5551234567";
+        Instructor1.CreatedBy = "davidogden@email.com";
 
         List<Instructor> instructors = [Instructor1];
 
-        int rowsAdded = await SchoolDatabase.AddAllItemsAsync(instructors);
+        int rowsAdded = await DbContext.AddAllItemsAsync(instructors);
         Debug.WriteLine($"Added {rowsAdded} rows to Instructor Table.");
     }
 
     private static async Task CreateClasses()
     {
-        await SchoolDatabase.DeleteAllItemsAsync<Class>();
+        await DbContext.DeleteAllItemsAsync<Class>();
 
         for (int i = 0; i < ClassList.Count; i++)
         {
             ClassList[i].ClassName = ClassNames[i];
             ClassList[i].Notes = "The teacher is great!";
             ClassList[i].InstructorId = Instructor1.Id;
+            ClassList[i].CreatedBy = "davidogden@email.com";
             if (i <= 5)
             {
                 ClassList[i].StartDate = new DateTime(2024, 01, 01);
@@ -145,17 +154,18 @@ public static class MockData
             }
         }
 
-        int rowsAdded = await SchoolDatabase.AddAllItemsAsync(ClassList);
+        int rowsAdded = await DbContext.AddAllItemsAsync(ClassList);
         Debug.WriteLine($"Added {rowsAdded} rows to Class Table.");
     }
 
     private static async Task CreateTermSchedules()
     {
-        await SchoolDatabase.DeleteAllItemsAsync<TermSchedule>();
+        await DbContext.DeleteAllItemsAsync<TermSchedule>();
 
         for (int i = 0; i < TermScheduleList.Count; i++)
         {
             TermScheduleList[i].ClassId = ClassList[i].Id;
+            TermScheduleList[i].CreatedBy = "davidogden@email.com";
             if (i <= 5)
             {
                 TermScheduleList[i].TermId = Term1.Id;
@@ -166,25 +176,25 @@ public static class MockData
             }
         }
 
-        int rowsAdded = await SchoolDatabase.AddAllItemsAsync(TermScheduleList);
+        int rowsAdded = await DbContext.AddAllItemsAsync(TermScheduleList);
         Debug.WriteLine($"Added {rowsAdded} rows to TermSchedule Table.");
     }
 
     private static async Task CreateExamTypes()
     {
-        await SchoolDatabase.DeleteAllItemsAsync<ExamType>();
+        await DbContext.DeleteAllItemsAsync<ExamType>();
 
         ExamType1.Type = "Objective Assessment";
         ExamType2.Type = "Performance Assessment";
 
         List<ExamType> examList = [ExamType1, ExamType2];
-        int rowsAdded = await SchoolDatabase.AddAllItemsAsync(examList);
+        int rowsAdded = await DbContext.AddAllItemsAsync(examList);
         Debug.WriteLine($"Added {rowsAdded} rows to ExamType Table.");
     }
 
     private static async Task CreateExams()
     {
-        await SchoolDatabase.DeleteAllItemsAsync<Exam>();
+        await DbContext.DeleteAllItemsAsync<Exam>();
 
         Random random = new Random();
 
@@ -200,6 +210,9 @@ public static class MockData
             OAList[i].ExamTypeId = ExamType1.Id;
             PAList[i].ExamTypeId = ExamType2.Id;
 
+            OAList[i].CreatedBy = "davidogden@email.com";
+            PAList[i].CreatedBy = "davidogden@email.com";
+
             int hourDiff = Math.Abs(ClassList[i].StartDate.TimeOfDay.Hours - ClassList[i].EndDate.TimeOfDay.Hours);
 
             OAList[i].StartTime = ClassList[i].StartDate.AddHours(random.Next(hourDiff));
@@ -209,9 +222,16 @@ public static class MockData
             PAList[i].EndTime = PAList[i].StartTime.AddHours(random.Next(4));
         }
 
-        int oARowsAdded = await SchoolDatabase.AddAllItemsAsync(OAList);
-        int pARowsAdded = await SchoolDatabase.AddAllItemsAsync(PAList);
+        int oARowsAdded = await DbContext.AddAllItemsAsync(OAList);
+        int pARowsAdded = await DbContext.AddAllItemsAsync(PAList);
 
         Debug.WriteLine($"Added to Exam Table:\n\t{oARowsAdded} Objective Assessments\n\t{pARowsAdded} Performance Assessments");
+    }
+
+    private static async Task CreateUser()
+    {
+        await DbContext.DeleteAllItemsAsync<User>();
+        bool userCreated = await AuthService.CreateUser(User1);
+        Debug.WriteLineIf(userCreated, "User Created Succesfully");
     }
 }
