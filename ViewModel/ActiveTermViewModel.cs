@@ -1,7 +1,9 @@
-﻿using SemesterSync.Database;
-using SemesterSync.Views;
-using CommunityToolkit.Maui.Core;
+﻿using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
+using SemesterSync.Data;
+using SemesterSync.Models;
+using SemesterSync.Services;
+using SemesterSync.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -11,12 +13,13 @@ namespace SemesterSync.ViewModel;
 public class ActiveTermViewModel : INotifyPropertyChanged
 {
     private readonly IPopupService popupService;
+    private string? activeUserEmail;
     public ActiveTermViewModel(IPopupService popupService)
     {
         this.popupService = popupService;
         ActiveTerm = null;
         ActiveTermIsNotNull = false;
-
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
         LoadCommand = new Command(execute: async () => await LoadActiveTermAsync());
         DeleteClassCommand = new Command<Class>(execute: async (Class c) => await DeleteClass(c));
         EllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await EllipsisClicked(selectedClass));
@@ -71,21 +74,25 @@ public class ActiveTermViewModel : INotifyPropertyChanged
     // Command Definitions
     public async Task LoadActiveTermAsync()
     {
-        
+
         await Task.Delay(50);
         LoadingPopup loadingPopup = new();
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
+
+        string? userEmail = await AuthService.RetrieveUserFromSecureStorage();
+        if (!string.IsNullOrWhiteSpace(userEmail)) activeUserEmail = userEmail;
+
         ActiveClasses.Clear();
-        ActiveTerm = await SchoolDatabase.GetFilteredItemAsync<Term>((term) => term.StartDate < DateTime.Now && term.EndDate > DateTime.Now);
+        ActiveTerm = await DbContext.GetFilteredItemAsync<Term>((term) => term.StartDate < DateTime.Now && term.EndDate > DateTime.Now && term.CreatedBy == activeUserEmail);
 
         ActiveTermIsNotNull = ActiveTerm != null;
 
         if (ActiveTermIsNotNull)
         {
-            IEnumerable<TermSchedule> filteredTermSchedules = await SchoolDatabase.GetFilteredListAsync<TermSchedule>((termSchedule) => termSchedule.TermId == ActiveTerm.Id);
+            IEnumerable<TermSchedule> filteredTermSchedules = await DbContext.GetFilteredListAsync<TermSchedule>((termSchedule) => termSchedule.TermId == ActiveTerm.Id && termSchedule.CreatedBy == activeUserEmail);
             foreach (TermSchedule termSchedule in filteredTermSchedules)
             {
-                Class activeClass = await SchoolDatabase.GetFilteredItemAsync<Class>((classActive) => classActive.Id == termSchedule.ClassId);
+                Class activeClass = await DbContext.GetFilteredItemAsync<Class>((classActive) => classActive.Id == termSchedule.ClassId && classActive.CreatedBy == activeUserEmail);
                 ActiveClasses.Add(activeClass);
             }
         }
@@ -96,14 +103,14 @@ public class ActiveTermViewModel : INotifyPropertyChanged
     private async Task DeleteClass(Class selectedClass)
     {
         // Delete related term schedules from TermSchedule table
-        TermSchedule termSchedule = await SchoolDatabase.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == selectedClass.Id);
-        await SchoolDatabase.DeleteItemAsync(termSchedule);
+        TermSchedule termSchedule = await DbContext.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == selectedClass.Id && ts.CreatedBy == activeUserEmail);
+        await DbContext.DeleteItemAsync(termSchedule);
 
         // Delete related exams from Exam table
-        IEnumerable<Exam> examsToDelete = await SchoolDatabase.GetFilteredListAsync<Exam>(exam => exam.ClassId == selectedClass.Id);
+        IEnumerable<Exam> examsToDelete = await DbContext.GetFilteredListAsync<Exam>(exam => exam.ClassId == selectedClass.Id && exam.CreatedBy == activeUserEmail);
         foreach (Exam exam in examsToDelete)
         {
-            await SchoolDatabase.DeleteItemAsync(exam);
+            await DbContext.DeleteItemAsync(exam);
         }
 
         // Remove from Classes list (UI)
