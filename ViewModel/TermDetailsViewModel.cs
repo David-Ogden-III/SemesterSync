@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui.Views;
 using SemesterSync.Data;
 using SemesterSync.Models;
+using SemesterSync.Services;
 using SemesterSync.Views;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -16,6 +17,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
         SelectionChangedCommand = new Command(execute: () => SelectionChanged());
         RemoveClassCommand = new Command<Class>(execute: (Class classToDelete) => RemoveClass(classToDelete));
         SaveCommand = new Command(execute: async () => await Save());
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
     }
 
     // Collections
@@ -34,6 +36,9 @@ public class TermDetailsViewModel : INotifyPropertyChanged
 
 
     // Objects
+
+    private string? activeUserEmail;
+
     ClassGroup? _selectedCG;
     public ClassGroup? SelectedCG
     {
@@ -109,7 +114,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
         await Task.Delay(50);
         LoadingPopup loadingPopup = new();
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
-        var allClasses = await DbContext.GetAllAsync<Class>();
+        var allClasses = await DbContext.GetFilteredListAsync<Class>(c =>  c.CreatedBy == activeUserEmail);
         AllClasses = allClasses.AsEnumerable();
         if (SelectedCG != null)
         {
@@ -174,6 +179,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             SelectedCG.Term.TermName = TermName;
             SelectedCG.Term.StartDate = StartDate;
             SelectedCG.Term.EndDate = EndDate;
+            SelectedCG.Term.CreatedBy = activeUserEmail;
             bool termInserted = await DbContext.AddItemAsync<Term>(SelectedCG.Term);
             Debug.WriteLine($"Term Inserted: {termInserted} Term ID: {SelectedCG.Term.Id}");
 
@@ -186,7 +192,8 @@ public class TermDetailsViewModel : INotifyPropertyChanged
                     TermSchedule termSchedule = new()
                     {
                         ClassId = c.Id,
-                        TermId = SelectedCG.Term.Id
+                        TermId = SelectedCG.Term.Id,
+                        CreatedBy = activeUserEmail
                     };
                     newSchedules.Add(termSchedule);
                 }
@@ -203,6 +210,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
                 SelectedCG.Term.TermName = TermName;
                 SelectedCG.Term.StartDate = StartDate;
                 SelectedCG.Term.EndDate = EndDate;
+                SelectedCG.Term.CreatedBy = activeUserEmail;
 
                 bool termUpdated = await DbContext.UpdateItemAsync(SelectedCG.Term);
                 Debug.WriteLine($"Term Updated: {termUpdated}");
@@ -219,7 +227,8 @@ public class TermDetailsViewModel : INotifyPropertyChanged
                     TermSchedule termSchedule = new()
                     {
                         ClassId = c.Id,
-                        TermId = SelectedCG.Term.Id
+                        TermId = SelectedCG.Term.Id,
+                        CreatedBy = activeUserEmail
                     };
                     newSchedules.Add(termSchedule);
                 }
@@ -233,7 +242,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             {
                 if (!SelectedCGClasses.Exists(selectedC => selectedC.Id == c.Id))
                 {
-                    TermSchedule tSToDelete = await DbContext.GetFilteredItemAsync<TermSchedule>(ts => ts.ClassId == c.Id);
+                    TermSchedule tSToDelete = await DbContext.GetFilteredItemAsync<TermSchedule>(ts => ts.ClassId == c.Id && ts.CreatedBy == activeUserEmail);
                     bool tsDeleted = await DbContext.DeleteItemAsync(tSToDelete);
                     Debug.WriteLine($"Removed Class {c.ClassName} from Table {SelectedCG.Term.TermName}");
                 }

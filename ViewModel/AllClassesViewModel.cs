@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Views;
 using SemesterSync.Data;
 using SemesterSync.Models;
+using SemesterSync.Services;
 using SemesterSync.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -13,6 +14,7 @@ namespace SemesterSync.ViewModel;
 public class AllClassesViewModel : INotifyPropertyChanged
 {
     private readonly IPopupService popupService;
+    private string? activeUserEmail;
     public AllClassesViewModel(IPopupService popupService)
     {
         this.popupService = popupService;
@@ -22,6 +24,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
         EditClassCommand = new Command<Class>(execute: async (Class c) => await EditClass(c));
         FilterClassesCommand = new Command(execute: () => FilterClasses());
         EllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await EllipsisClicked(selectedClass));
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
     }
 
     // Collections
@@ -80,11 +83,11 @@ public class AllClassesViewModel : INotifyPropertyChanged
         await DbContext.DeleteItemAsync(selectedClass);
 
         // Delete related term schedules from TermSchedule table
-        TermSchedule termSchedule = await DbContext.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == selectedClass.Id);
+        TermSchedule termSchedule = await DbContext.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == selectedClass.Id && ts.CreatedBy == activeUserEmail);
         await DbContext.DeleteItemAsync(termSchedule);
 
         // Delete related exams from Exam table
-        IEnumerable<Exam> examsToDelete = await DbContext.GetFilteredListAsync<Exam>(exam => exam.ClassId == selectedClass.Id);
+        IEnumerable<Exam> examsToDelete = await DbContext.GetFilteredListAsync<Exam>(exam => exam.ClassId == selectedClass.Id && exam.CreatedBy == activeUserEmail);
         foreach (Exam exam in examsToDelete)
         {
             await DbContext.DeleteItemAsync(exam);
@@ -112,7 +115,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
         Classes.Clear();
         ClassesSourceOfTruth.Clear();
 
-        List<Class> dbClasses = await DbContext.GetAllAsync<Class>();
+        List<Class> dbClasses = (await DbContext.GetFilteredListAsync<Class>(c => c.CreatedBy == activeUserEmail)).ToList();
 
         foreach (Class dbClass in dbClasses)
         {

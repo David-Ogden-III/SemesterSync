@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
 using SemesterSync.Data;
 using SemesterSync.Models;
+using SemesterSync.Services;
 using SemesterSync.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -15,12 +16,14 @@ namespace SemesterSync.ViewModel;
 public class UpdateClassViewModel : INotifyPropertyChanged
 {
     private readonly IPopupService popupService;
+    private string? activeUserEmail;
     public UpdateClassViewModel(IPopupService popupService)
     {
         this.popupService = popupService;
         LoadCommand = new Command(execute: async () => await Load());
         BackCommand = new Command(execute: async () => await Back());
         SaveCommand = new Command(execute: async () => await Save());
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
         ExamEllipsisClickedCommand = new Command<DetailedExam>(execute: async (DetailedExam selectedExam) => await ExamEllipsisClicked(selectedExam));
         EditExamCommand = new Command<DetailedExam>(execute: async (DetailedExam selectedExam) => await EditExam(selectedExam));
         AddExamCommand = new Command(execute: async () => await AddExam());
@@ -211,7 +214,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         if (SelectedClass != null)
         {
-            Instructor = await DbContext.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId);
+            Instructor = await DbContext.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId && instructor.CreatedBy == activeUserEmail);
 
             ClassName = SelectedClass.ClassName;
             StartDate = SelectedClass.StartDate;
@@ -223,7 +226,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             InstructorPhoneNum = Instructor.PhoneNumber;
             SelectedStatus = StatusOptions.Find(option => option == SelectedClass.Status);
 
-            List<Exam> exams = (await DbContext.GetFilteredListAsync<Exam>(exam => exam.ClassId == SelectedClass.Id)).ToList();
+            List<Exam> exams = (await DbContext.GetFilteredListAsync<Exam>(exam => exam.ClassId == SelectedClass.Id && exam.CreatedBy == activeUserEmail)).ToList();
             if (exams.Count > 0)
             {
                 ExistingExamList = exams;
@@ -278,6 +281,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             SelectedClass.EndDate = EndDate;
             SelectedClass.Notes = Notes;
             SelectedClass.InstructorId = await GetInstructorId();
+            SelectedClass.CreatedBy = activeUserEmail;
 
             if (SelectedClass.Id == 0)
             {
@@ -399,6 +403,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
                 EndTime = detailedExam.EndTime,
                 ClassId = SelectedClass.Id,
                 ExamTypeId = detailedExam.ExamTypeId,
+                CreatedBy = detailedExam.CreatedBy,
             };
             if (newExam.Id == 0)
             {
@@ -424,7 +429,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
     private async Task<int> GetInstructorId()
     {
         Instructor existingInstructor = await DbContext.GetFilteredItemAsync<Instructor>(existingTeacher =>
-                existingTeacher.InstructorName == InstructorName && existingTeacher.Email == InstructorEmail && existingTeacher.PhoneNumber == InstructorPhoneNum);
+                existingTeacher.InstructorName == InstructorName && existingTeacher.Email == InstructorEmail && existingTeacher.PhoneNumber == InstructorPhoneNum && existingTeacher.CreatedBy == activeUserEmail);
 
         if (existingInstructor == null)
         {
@@ -433,6 +438,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
                 InstructorName = InstructorName,
                 PhoneNumber = InstructorPhoneNum,
                 Email = InstructorEmail,
+                CreatedBy = activeUserEmail
             };
             await DbContext.AddItemAsync(existingInstructor);
         }

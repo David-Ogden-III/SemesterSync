@@ -1,14 +1,18 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using SemesterSync.Data;
 using SemesterSync.Models;
+using SemesterSync.Services;
 using System.ComponentModel;
 
 namespace SemesterSync.ViewModel;
 
 public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 {
+    private string? activeUserEmail;
     public AddModifyExamPopupViewModel()
     {
+
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
     }
 
     private List<ExamType> ExamTypes { get; set; } = [];
@@ -125,7 +129,8 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 
         SelectedExam ??= new(new Exam(), "")
         {
-            ExamName = String.Empty
+            ExamName = String.Empty,
+            CreatedBy = activeUserEmail
         };
 
         bool examPropertiesChanged = ExamPropertiesChanged();

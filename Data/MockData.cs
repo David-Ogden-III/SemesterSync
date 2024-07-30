@@ -83,6 +83,7 @@ public static class MockData
     private static ExamType ExamType2 { get; set; } = new();
 
     private static UserDTO User1 { get; set; } = new("David", "Ogden", "davidogden@email.com", "555-555-555", "software engineering", new DateTime(2024, 08, 31), "password");
+    private static UserDTO User2 { get; set; } = new("David", "Ogden", "ogden@email.com", "555-555-555", "software engineering", new DateTime(2024, 08, 31), "password");
 
     public static async Task CreateAllMockData()
     {
@@ -232,6 +233,7 @@ public static class MockData
     {
         await DbContext.DeleteAllItemsAsync<User>();
         bool userCreated = await AuthService.CreateUser(User1);
+        await AuthService.CreateUser(User2);
         Debug.WriteLineIf(userCreated, "User Created Succesfully");
     }
 }

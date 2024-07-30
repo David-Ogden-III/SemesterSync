@@ -1,6 +1,7 @@
 ﻿using CommunityToolkit.Maui.Views;
 using SemesterSync.Data;
 using SemesterSync.Models;
+using SemesterSync.Services;
 using SemesterSync.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
@@ -10,11 +11,14 @@ namespace SemesterSync.ViewModel;
 [QueryProperty(nameof(SelectedClass), "SelectedClass")]
 public class DetailedClassViewModel : INotifyPropertyChanged
 {
+
+    private string? activeUserEmail;
     public DetailedClassViewModel()
     {
         LoadCommand = new Command(execute: async () => await Load());
         BackCommand = new Command(execute: async () => await Back());
         ShareCommand = new Command(execute: async () => await ShareTask());
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
     }
 
     // Helper Class
@@ -77,7 +81,7 @@ public class DetailedClassViewModel : INotifyPropertyChanged
         else
         {
             NotesHasText = SelectedClass.Notes.Length > 0;
-            List<Exam> exams = (await DbContext.GetFilteredListAsync<Exam>(exam => exam.ClassId == SelectedClass.Id)).ToList();
+            List<Exam> exams = (await DbContext.GetFilteredListAsync<Exam>(exam => exam.ClassId == SelectedClass.Id && exam.CreatedBy == activeUserEmail)).ToList();
 
             if (exams.Count > 0)
             {
@@ -96,7 +100,7 @@ public class DetailedClassViewModel : INotifyPropertyChanged
                 }
             }
 
-            Instructor = await DbContext.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId);
+            Instructor = await DbContext.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId && instructor.CreatedBy == activeUserEmail);
         }
         await Task.Delay(250);
         loadingPopup.Close();
