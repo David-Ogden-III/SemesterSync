@@ -5,7 +5,7 @@
              x:Class="SemesterSync.Views.ActiveTerm"
              xmlns:controls="clr-namespace:SemesterSync.Resources.Controls"
              xmlns:viewmodel="clr-namespace:SemesterSync.ViewModel"
-             xmlns:model="clr-namespace:SemesterSync.Database"
+             xmlns:model="clr-namespace:SemesterSync.Models"
              x:DataType="viewmodel:ActiveTermViewModel">
 
     <ContentPage.Behaviors>
