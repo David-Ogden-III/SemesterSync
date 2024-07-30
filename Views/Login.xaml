@@ -5,7 +5,7 @@
              xmlns:controls="clr-namespace:SemesterSync.Resources.Controls"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              xmlns:viewmodel="clr-namespace:SemesterSync.ViewModel"
-             xmlns:model="clr-namespace:SemesterSync.Database"
+             xmlns:model="clr-namespace:SemesterSync.Data"
              x:DataType="viewmodel:LoginViewModel">
 
     <ContentPage.Behaviors>
@@ -13,20 +13,52 @@
                                         Command="{Binding LoadCommand}" />
     </ContentPage.Behaviors>
 
-    <Grid RowDefinitions="2*, *, 2*">
-        <VerticalStackLayout Grid.Row="1">
-            <Border
-                Background="{StaticResource ControlBackground}"
-                Stroke="White"
-                StrokeShape="Ellipses"
-                WidthRequest="100"
-                HeightRequest="100">
-                <Button ImageSource="{Binding LoginImage}"
-                        BackgroundColor="{StaticResource ControlColor}"
-                        Command="{Binding LoginCommand}"
-                        VerticalOptions="CenterAndExpand" />
-            </Border>
+    <Grid RowDefinitions="300, *">
+        <Grid RowDefinitions="300">
+            <Grid.Background>
+                <LinearGradientBrush EndPoint="0,1">
+                    <GradientStop Color="{StaticResource PageColor}"
+                                  Offset=".9" />
+                    <GradientStop Color="{StaticResource ControlColor}"
+                                  Offset="1" />
+                </LinearGradientBrush>
+            </Grid.Background>
+            <Image Source="wgu.png"
+                   WidthRequest="255"
+                   VerticalOptions="Start" />
+
+        </Grid>
+        <VerticalStackLayout Grid.Row="1"
+                             BackgroundColor="{StaticResource ControlColor}"
+                             Padding="30">
+            <Label Text="Login"
+                   TextColor="White"
+                   HorizontalOptions="Start"
+                   Margin="0,0,0,5" />
+            <Entry Placeholder="Email"
+                   Text="{Binding Email}"
+                   BackgroundColor="White"
+                   Keyboard="Email"
+                   Margin="0,0,0,5" />
+            <Entry Placeholder="Password"
+                   BackgroundColor="White"
+                   Text="{Binding Password}"
+                   IsPassword="True"
+                   Margin="0,5,0,5" />
+            <Button Text="Login"
+                    Command="{Binding LoginCommand}"
+                    BackgroundColor="{StaticResource PageColor}"
+                    Margin="0,5,0,0" />
+            <Button Text="Register"
+                    TextColor="White"
+                    FontSize="12"
+                    BackgroundColor="Transparent"
+                    WidthRequest="74"
+                    HeightRequest="37"
+                    HorizontalOptions="End"
+                    Margin="0,0,10,0" />
+
         </VerticalStackLayout>
     </Grid>
-    
+
 </ContentPage>
