@@ -1,5 +1,5 @@
-﻿using SemesterSync.Database;
-using Plugin.LocalNotification;
+﻿using Plugin.LocalNotification;
+using SemesterSync.Models;
 using System.ComponentModel;
 using System.Diagnostics;
 

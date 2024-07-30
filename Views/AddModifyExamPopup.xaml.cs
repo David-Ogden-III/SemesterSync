@@ -1,6 +1,6 @@
-using SemesterSync.Database;
-using SemesterSync.ViewModel;
 using CommunityToolkit.Maui.Views;
+using SemesterSync.Models;
+using SemesterSync.ViewModel;
 
 namespace SemesterSync.Views;
 

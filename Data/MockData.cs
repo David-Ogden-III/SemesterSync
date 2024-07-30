@@ -1,6 +1,6 @@
-﻿using System.Diagnostics;
-using SemesterSync.Models;
+﻿using SemesterSync.Models;
 using SemesterSync.Services;
+using System.Diagnostics;
 
 namespace SemesterSync.Data;
 

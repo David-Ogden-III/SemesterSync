@@ -1,8 +1,9 @@
-﻿using SemesterSync.Database;
-using SemesterSync.Views;
-using CommunityToolkit.Maui.Alerts;
+﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Views;
+using SemesterSync.Data;
+using SemesterSync.Models;
+using SemesterSync.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -210,7 +211,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         if (SelectedClass != null)
         {
-            Instructor = await SchoolDatabase.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId);
+            Instructor = await DbContext.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId);
 
             ClassName = SelectedClass.ClassName;
             StartDate = SelectedClass.StartDate;
@@ -222,11 +223,11 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             InstructorPhoneNum = Instructor.PhoneNumber;
             SelectedStatus = StatusOptions.Find(option => option == SelectedClass.Status);
 
-            List<Exam> exams = (await SchoolDatabase.GetFilteredListAsync<Exam>(exam => exam.ClassId == SelectedClass.Id)).ToList();
+            List<Exam> exams = (await DbContext.GetFilteredListAsync<Exam>(exam => exam.ClassId == SelectedClass.Id)).ToList();
             if (exams.Count > 0)
             {
                 ExistingExamList = exams;
-                List<ExamType> allExamTypes = await SchoolDatabase.GetAllAsync<ExamType>();
+                List<ExamType> allExamTypes = await DbContext.GetAllAsync<ExamType>();
                 foreach (Exam exam in exams)
                 {
                     if (ExamList.ToList().Exists(existingExam => existingExam.ExamId == exam.Id))
@@ -280,11 +281,11 @@ public class UpdateClassViewModel : INotifyPropertyChanged
 
             if (SelectedClass.Id == 0)
             {
-                await SchoolDatabase.AddItemAsync(SelectedClass);
+                await DbContext.AddItemAsync(SelectedClass);
             }
             else
             {
-                await SchoolDatabase.UpdateItemAsync(SelectedClass);
+                await DbContext.UpdateItemAsync(SelectedClass);
             }
         }
 
@@ -381,7 +382,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             await toast.Show(cancellationTokenSource.Token);
             return allInputsValid;
         }
-        
+
         return allInputsValid;
     }
 
@@ -405,24 +406,24 @@ public class UpdateClassViewModel : INotifyPropertyChanged
             }
             else
             {
-                await SchoolDatabase.UpdateItemAsync(newExam);
+                await DbContext.UpdateItemAsync(newExam);
             }
 
         }
-        await SchoolDatabase.AddAllItemsAsync(newExams);
+        await DbContext.AddAllItemsAsync(newExams);
 
         foreach (Exam existingExam in ExistingExamList)
         {
             if (ExamList.ToList().Exists(exam => exam.ExamId == existingExam.Id))
                 break;
 
-            await SchoolDatabase.DeleteItemAsync(existingExam);
+            await DbContext.DeleteItemAsync(existingExam);
         }
     }
 
     private async Task<int> GetInstructorId()
     {
-        Instructor existingInstructor = await SchoolDatabase.GetFilteredItemAsync<Instructor>(existingTeacher =>
+        Instructor existingInstructor = await DbContext.GetFilteredItemAsync<Instructor>(existingTeacher =>
                 existingTeacher.InstructorName == InstructorName && existingTeacher.Email == InstructorEmail && existingTeacher.PhoneNumber == InstructorPhoneNum);
 
         if (existingInstructor == null)
@@ -433,7 +434,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
                 PhoneNumber = InstructorPhoneNum,
                 Email = InstructorEmail,
             };
-            await SchoolDatabase.AddItemAsync(existingInstructor);
+            await DbContext.AddItemAsync(existingInstructor);
         }
         return existingInstructor.Id;
     }

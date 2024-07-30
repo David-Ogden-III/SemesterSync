@@ -18,7 +18,7 @@ public class User
     public string PhoneNumber { get; set; }
 
     [Column("major")]
-    public string Major {  get; set; }
+    public string Major { get; set; }
 
     [Column("salt")]
     public byte[] Salt { get; set; }
@@ -37,7 +37,7 @@ public class User
 
 
 
-    public User (UserDTO userDTO)
+    public User(UserDTO userDTO)
     {
         Email = userDTO.Email;
         FirstName = userDTO.FirstName;

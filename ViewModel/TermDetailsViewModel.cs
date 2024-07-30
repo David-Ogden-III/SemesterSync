@@ -1,7 +1,8 @@
-﻿using SemesterSync.Database;
-using SemesterSync.Views;
-using CommunityToolkit.Maui.Alerts;
+﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Views;
+using SemesterSync.Data;
+using SemesterSync.Models;
+using SemesterSync.Views;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -108,7 +109,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
         await Task.Delay(50);
         LoadingPopup loadingPopup = new();
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
-        var allClasses = await SchoolDatabase.GetAllAsync<Class>();
+        var allClasses = await DbContext.GetAllAsync<Class>();
         AllClasses = allClasses.AsEnumerable();
         if (SelectedCG != null)
         {
@@ -165,7 +166,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
 
             return;
         }
-        
+
 
 
         if (SelectedCG?.Term.Id == 0) // 0 is default for unassigned int. AKA Add Term clicked, not edit term clicked on last page
@@ -173,7 +174,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             SelectedCG.Term.TermName = TermName;
             SelectedCG.Term.StartDate = StartDate;
             SelectedCG.Term.EndDate = EndDate;
-            bool termInserted = await SchoolDatabase.AddItemAsync<Term>(SelectedCG.Term);
+            bool termInserted = await DbContext.AddItemAsync<Term>(SelectedCG.Term);
             Debug.WriteLine($"Term Inserted: {termInserted} Term ID: {SelectedCG.Term.Id}");
 
             if (SelectedCG.Count > 0)
@@ -190,7 +191,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
                     newSchedules.Add(termSchedule);
                 }
 
-                int numClassesAdded = await SchoolDatabase.AddAllItemsAsync<TermSchedule>(newSchedules);
+                int numClassesAdded = await DbContext.AddAllItemsAsync<TermSchedule>(newSchedules);
                 Debug.WriteLine($"{SelectedCG.Term.TermName}: {numClassesAdded} classes added");
             }
         }
@@ -203,7 +204,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
                 SelectedCG.Term.StartDate = StartDate;
                 SelectedCG.Term.EndDate = EndDate;
 
-                bool termUpdated = await SchoolDatabase.UpdateItemAsync(SelectedCG.Term);
+                bool termUpdated = await DbContext.UpdateItemAsync(SelectedCG.Term);
                 Debug.WriteLine($"Term Updated: {termUpdated}");
             }
 
@@ -223,7 +224,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
                     newSchedules.Add(termSchedule);
                 }
             }
-            int numClassesAdded = await SchoolDatabase.AddAllItemsAsync<TermSchedule>(newSchedules);
+            int numClassesAdded = await DbContext.AddAllItemsAsync<TermSchedule>(newSchedules);
             Debug.WriteLine($"{SelectedCG.Term.TermName}: {numClassesAdded} classes added");
 
             // Remove Classes from DB if they were no longer selected
@@ -232,8 +233,8 @@ public class TermDetailsViewModel : INotifyPropertyChanged
             {
                 if (!SelectedCGClasses.Exists(selectedC => selectedC.Id == c.Id))
                 {
-                    TermSchedule tSToDelete = await SchoolDatabase.GetFilteredItemAsync<TermSchedule>(ts => ts.ClassId == c.Id);
-                    bool tsDeleted = await SchoolDatabase.DeleteItemAsync(tSToDelete);
+                    TermSchedule tSToDelete = await DbContext.GetFilteredItemAsync<TermSchedule>(ts => ts.ClassId == c.Id);
+                    bool tsDeleted = await DbContext.DeleteItemAsync(tSToDelete);
                     Debug.WriteLine($"Removed Class {c.ClassName} from Table {SelectedCG.Term.TermName}");
                 }
             }

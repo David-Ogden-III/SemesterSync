@@ -51,6 +51,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
+	  <None Remove="Platforms\Android\Resources\xml\auto_backup_rules.xml" />
 	  <None Remove="Resources\Images\chevron_down.svg" />
 	  <None Remove="Resources\Images\ellipsis.svg" />
 	  <None Remove="Resources\Images\face_id.svg" />

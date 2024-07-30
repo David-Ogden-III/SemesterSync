@@ -1,8 +1,9 @@
-﻿using SemesterSync.Database;
-using SemesterSync.Views;
-using CommunityToolkit.Maui.Core;
+﻿using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Views;
+using SemesterSync.Data;
+using SemesterSync.Models;
+using SemesterSync.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -94,14 +95,14 @@ public class AllTermsViewModel : INotifyPropertyChanged
     {
         // Delete Term from Terms table
         Term selectedTerm = selectedCG.Term;
-        bool itemDeleted = await SchoolDatabase.DeleteItemAsync(selectedTerm);
+        bool itemDeleted = await DbContext.DeleteItemAsync(selectedTerm);
 
         // Delete TermSchedules associated to terms in TermSchedules table
         foreach (Class classToDelete in selectedCG)
         {
             string className = classToDelete.ClassName;
-            TermSchedule termSchedule = (await SchoolDatabase.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == classToDelete.Id));
-            bool classDeleted = await SchoolDatabase.DeleteItemAsync(termSchedule);
+            TermSchedule termSchedule = (await DbContext.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == classToDelete.Id));
+            bool classDeleted = await DbContext.DeleteItemAsync(termSchedule);
             Debug.WriteLineIf(classDeleted, $"Deleted Class: {className}");
         }
 
@@ -124,18 +125,18 @@ public class AllTermsViewModel : INotifyPropertyChanged
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
         Classes.Clear();
         ClassesSourceOfTruth.Clear();
-        List<Term> allTermResults = (await SchoolDatabase.GetAllAsync<Term>());
+        List<Term> allTermResults = (await DbContext.GetAllAsync<Term>());
         ObservableCollection<ClassGroup> cg = [];
 
         foreach (Term term in allTermResults)
         {
-            List<TermSchedule> termSchedules = (await SchoolDatabase.GetFilteredListAsync<TermSchedule>((ts) => ts.TermId == term.Id)).ToList();
+            List<TermSchedule> termSchedules = (await DbContext.GetFilteredListAsync<TermSchedule>((ts) => ts.TermId == term.Id)).ToList();
 
             ObservableCollection<Class> classes = [];
 
             foreach (TermSchedule termSchedule in termSchedules)
             {
-                Class selectedClass = await SchoolDatabase.GetFilteredItemAsync<Class>((c) => c.Id == termSchedule.ClassId);
+                Class selectedClass = await DbContext.GetFilteredItemAsync<Class>((c) => c.Id == termSchedule.ClassId);
                 classes.Add(selectedClass);
             }
 
@@ -163,8 +164,8 @@ public class AllTermsViewModel : INotifyPropertyChanged
             Class? foundClass = cg.ToList().Find(c => c.Id == selectedClass.Id);
             if (foundClass != null)
             {
-                TermSchedule termSchedule = await SchoolDatabase.GetFilteredItemAsync<TermSchedule>(ts => ts.ClassId == foundClass.Id);
-                await SchoolDatabase.DeleteItemAsync(termSchedule);
+                TermSchedule termSchedule = await DbContext.GetFilteredItemAsync<TermSchedule>(ts => ts.ClassId == foundClass.Id);
+                await DbContext.DeleteItemAsync(termSchedule);
                 cg.Remove(foundClass);
                 break;
             }

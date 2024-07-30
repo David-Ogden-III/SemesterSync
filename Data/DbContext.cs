@@ -1,6 +1,6 @@
-﻿using SQLite;
+﻿using SemesterSync.Models;
+using SQLite;
 using System.Linq.Expressions;
-using SemesterSync.Models;
 
 namespace SemesterSync.Data;
 
@@ -36,7 +36,7 @@ public static class DbContext
         await db.CreateTableAsync<ExamType>();
         await db.CreateTableAsync<User>();
         await InsertExamTypes();
-        
+
     }
 
     private static async Task InsertExamTypes()

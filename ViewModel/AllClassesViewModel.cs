@@ -1,8 +1,9 @@
-﻿using SemesterSync.Database;
-using SemesterSync.Views;
-using CommunityToolkit.Maui.Core;
+﻿using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Maui.Core.Extensions;
 using CommunityToolkit.Maui.Views;
+using SemesterSync.Data;
+using SemesterSync.Models;
+using SemesterSync.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -76,17 +77,17 @@ public class AllClassesViewModel : INotifyPropertyChanged
     private async Task DeleteClass(Class selectedClass)
     {
         // Delete class from Class table
-        await SchoolDatabase.DeleteItemAsync(selectedClass);
+        await DbContext.DeleteItemAsync(selectedClass);
 
         // Delete related term schedules from TermSchedule table
-        TermSchedule termSchedule = await SchoolDatabase.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == selectedClass.Id);
-        await SchoolDatabase.DeleteItemAsync(termSchedule);
+        TermSchedule termSchedule = await DbContext.GetFilteredItemAsync<TermSchedule>((ts) => ts.ClassId == selectedClass.Id);
+        await DbContext.DeleteItemAsync(termSchedule);
 
         // Delete related exams from Exam table
-        IEnumerable<Exam> examsToDelete = await SchoolDatabase.GetFilteredListAsync<Exam>(exam => exam.ClassId == selectedClass.Id);
+        IEnumerable<Exam> examsToDelete = await DbContext.GetFilteredListAsync<Exam>(exam => exam.ClassId == selectedClass.Id);
         foreach (Exam exam in examsToDelete)
         {
-            await SchoolDatabase.DeleteItemAsync(exam);
+            await DbContext.DeleteItemAsync(exam);
         }
 
         // Remove from Classes list (UI)
@@ -111,14 +112,14 @@ public class AllClassesViewModel : INotifyPropertyChanged
         Classes.Clear();
         ClassesSourceOfTruth.Clear();
 
-        List<Class> dbClasses = await SchoolDatabase.GetAllAsync<Class>();
+        List<Class> dbClasses = await DbContext.GetAllAsync<Class>();
 
         foreach (Class dbClass in dbClasses)
         {
             Classes.Add(dbClass);
             ClassesSourceOfTruth.Add(dbClass);
         }
-            
+
 
         await Task.Delay(250);
         loadingPopup.Close();

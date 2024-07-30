@@ -1,6 +1,4 @@
-﻿using SQLite;
-
-namespace SemesterSync.Models;
+﻿namespace SemesterSync.Models;
 
 
 public class DetailedExam(Exam exam, string examType)

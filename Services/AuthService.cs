@@ -1,10 +1,7 @@
-﻿using System.Data;
-using System.Data.SqlTypes;
+﻿using SemesterSync.Data;
+using SemesterSync.Models;
 using System.Security.Cryptography;
 using System.Text;
-using System.Text.Json;
-using SemesterSync.Data;
-using SemesterSync.Models;
 
 namespace SemesterSync.Services;
 
@@ -13,7 +10,7 @@ public static class AuthService
 
     private static byte[] GenerateSalt()
     {
-        byte[] saltBytes = RandomNumberGenerator.GetBytes(128/8);
+        byte[] saltBytes = RandomNumberGenerator.GetBytes(128 / 8);
 
         return saltBytes;
     }
@@ -23,7 +20,7 @@ public static class AuthService
         byte[] passwordBytes = Encoding.UTF8.GetBytes(plainTextPassword);
         byte[] saltedPassword = passwordBytes.Concat(salt).ToArray();
         byte[] hashedPassword = SHA256.HashData(saltedPassword);
-            
+
         return hashedPassword;
     }
 
@@ -71,7 +68,7 @@ public static class AuthService
         }
 
         await AddUserToSecureStorage(storedUser);
-        
+
         return true;
     }
 

@@ -1,5 +1,6 @@
-﻿using SemesterSync.Database;
-using CommunityToolkit.Maui.Alerts;
+﻿using CommunityToolkit.Maui.Alerts;
+using SemesterSync.Data;
+using SemesterSync.Models;
 using System.ComponentModel;
 
 namespace SemesterSync.ViewModel;
@@ -81,7 +82,7 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 
     public async Task OnLoading(DetailedExam selectedExam)
     {
-        ExamTypes = await SchoolDatabase.GetAllAsync<ExamType>();
+        ExamTypes = await DbContext.GetAllAsync<ExamType>();
         SelectedExam = selectedExam;
         ExamName = selectedExam.ExamName;
         PopupTitle = selectedExam.ExamName;
@@ -95,7 +96,7 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 
     public async Task OnLoading()
     {
-        ExamTypes = await SchoolDatabase.GetAllAsync<ExamType>();
+        ExamTypes = await DbContext.GetAllAsync<ExamType>();
     }
 
     public async Task<DetailedExam?> Save()
@@ -104,7 +105,7 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 
         if (!startLessThanEnd)
         {
-            
+
             string toastText = "End date must be after start date";
             var toast = Toast.Make(toastText);
 

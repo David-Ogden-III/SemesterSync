@@ -1,6 +1,4 @@
-﻿using SemesterSync.Data;
-using SemesterSync.Services;
-using SQLite;
+﻿using SQLite;
 
 namespace SemesterSync.Models;
 

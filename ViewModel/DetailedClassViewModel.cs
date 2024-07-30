@@ -1,6 +1,7 @@
-﻿using SemesterSync.Database;
+﻿using CommunityToolkit.Maui.Views;
+using SemesterSync.Data;
+using SemesterSync.Models;
 using SemesterSync.Views;
-using CommunityToolkit.Maui.Views;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
 
@@ -76,11 +77,11 @@ public class DetailedClassViewModel : INotifyPropertyChanged
         else
         {
             NotesHasText = SelectedClass.Notes.Length > 0;
-            List<Exam> exams = (await SchoolDatabase.GetFilteredListAsync<Exam>(exam => exam.ClassId == SelectedClass.Id)).ToList();
+            List<Exam> exams = (await DbContext.GetFilteredListAsync<Exam>(exam => exam.ClassId == SelectedClass.Id)).ToList();
 
             if (exams.Count > 0)
             {
-                List<ExamType> allExamTypes = await SchoolDatabase.GetAllAsync<ExamType>();
+                List<ExamType> allExamTypes = await DbContext.GetAllAsync<ExamType>();
                 foreach (Exam exam in exams)
                 {
                     if (ExamList.ToList().Exists(existingExam => existingExam.ExamId == exam.Id))
@@ -95,7 +96,7 @@ public class DetailedClassViewModel : INotifyPropertyChanged
                 }
             }
 
-            Instructor = await SchoolDatabase.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId);
+            Instructor = await DbContext.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId);
         }
         await Task.Delay(250);
         loadingPopup.Close();

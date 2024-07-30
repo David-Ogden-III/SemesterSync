@@ -1,10 +1,10 @@
-﻿using SemesterSync.Database;
-using SemesterSync.Views;
-using SemesterSync.ViewModel;
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Plugin.LocalNotification;
 using Plugin.Maui.Biometric;
+using SemesterSync.Data;
+using SemesterSync.ViewModel;
+using SemesterSync.Views;
 
 namespace SemesterSync
 {
@@ -23,7 +23,7 @@ namespace SemesterSync
                 .UseMauiCommunityToolkit()
                 .UseLocalNotification();
 
-            Task.Run(async () => await MockData.CreateAllMockData());
+
 
             builder.Services.AddSingleton<Login>();
             builder.Services.AddSingleton<LoginViewModel>();
@@ -54,6 +54,7 @@ namespace SemesterSync
             builder.Services.AddSingleton<IBiometric>(BiometricAuthenticationService.Default);
 #if DEBUG
             builder.Logging.AddDebug();
+            Task.Run(async () => await MockData.CreateAllMockData());
 #endif
 
             return builder.Build();
