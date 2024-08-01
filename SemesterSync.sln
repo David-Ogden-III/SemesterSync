@@ -5,7 +5,7 @@ VisualStudioVersion = 17.10.34928.147
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SemesterSync", "SemesterSync.csproj", "{91A9023D-C9D5-47A0-AF8E-388F697BAE6B}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SemesterSyncTest", "..\SemesterSyncTest\SemesterSyncTest.csproj", "{B45E172D-39C0-4BE2-8C64-D7603DD7A2C1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SemesterSyncTest", "..\SemesterSyncTest\SemesterSyncTest.csproj", "{1D65C7F8-A7F7-46B9-AF32-A21945C4FB8B}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,10 +19,10 @@ Global
 		{91A9023D-C9D5-47A0-AF8E-388F697BAE6B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{91A9023D-C9D5-47A0-AF8E-388F697BAE6B}.Release|Any CPU.Build.0 = Release|Any CPU
 		{91A9023D-C9D5-47A0-AF8E-388F697BAE6B}.Release|Any CPU.Deploy.0 = Release|Any CPU
-		{B45E172D-39C0-4BE2-8C64-D7603DD7A2C1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{B45E172D-39C0-4BE2-8C64-D7603DD7A2C1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{B45E172D-39C0-4BE2-8C64-D7603DD7A2C1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{B45E172D-39C0-4BE2-8C64-D7603DD7A2C1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1D65C7F8-A7F7-46B9-AF32-A21945C4FB8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1D65C7F8-A7F7-46B9-AF32-A21945C4FB8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1D65C7F8-A7F7-46B9-AF32-A21945C4FB8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1D65C7F8-A7F7-46B9-AF32-A21945C4FB8B}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
