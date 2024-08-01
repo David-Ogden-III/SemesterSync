@@ -23,7 +23,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
         LoadCommand = new Command(execute: async () => await Load());
         BackCommand = new Command(execute: async () => await Back());
         SaveCommand = new Command(execute: async () => await Save());
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
         ExamEllipsisClickedCommand = new Command<DetailedExam>(execute: async (DetailedExam selectedExam) => await ExamEllipsisClicked(selectedExam));
         EditExamCommand = new Command<DetailedExam>(execute: async (DetailedExam selectedExam) => await EditExam(selectedExam));
         AddExamCommand = new Command(execute: async () => await AddExam());

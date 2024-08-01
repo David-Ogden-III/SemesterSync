@@ -25,7 +25,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
         FilterTermsCommand = new Command(execute: () => FilterTerms());
         TermEllipsisClickedCommand = new Command<ClassGroup>(execute: async (ClassGroup selectedCG) => await TermEllipsisClicked(selectedCG));
         ClassEllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await ClassEllipsisClicked(selectedClass));
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
     }
 
 

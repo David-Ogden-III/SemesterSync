@@ -7,14 +7,6 @@ namespace SemesterSync.Services;
 
 public static class AuthService
 {
-
-    private static byte[] GenerateSalt()
-    {
-        byte[] saltBytes = RandomNumberGenerator.GetBytes(128 / 8);
-
-        return saltBytes;
-    }
-
     private static byte[] HashPassword(string plainTextPassword, byte[] salt)
     {
         byte[] passwordBytes = Encoding.UTF8.GetBytes(plainTextPassword);
@@ -26,7 +18,7 @@ public static class AuthService
 
     public static async Task<bool> CreateUser(UserDTO userDTO)
     {
-        byte[] saltBytes = GenerateSalt();
+        byte[] saltBytes = RandomNumberGenerator.GetBytes(128 / 8);
         string plainTextPassword = userDTO.Password;
 
         byte[] hashedPassword = HashPassword(plainTextPassword, saltBytes);
@@ -43,7 +35,7 @@ public static class AuthService
 
         if (userCreated)
         {
-            await AddUserToSecureStorage(user);
+            await AddUserEmailToSecureStorage(user);
         }
 
         return userCreated;
@@ -67,18 +59,18 @@ public static class AuthService
             if (storedPwHash[i] != enteredPasswordHash[i]) return false;
         }
 
-        await AddUserToSecureStorage(storedUser);
+        await AddUserEmailToSecureStorage(storedUser);
 
         return true;
     }
 
-    public static async Task AddUserToSecureStorage(User user)
+    public static async Task AddUserEmailToSecureStorage(User user)
     {
         string userEmail = user.Email;
         await SecureStorage.SetAsync("activeUser", userEmail);
     }
 
-    public static async Task<string?> RetrieveUserFromSecureStorage()
+    public static async Task<string?> RetrieveUserEmailFromSecureStorage()
     {
         string? userEmail = await SecureStorage.GetAsync("activeUser");
 

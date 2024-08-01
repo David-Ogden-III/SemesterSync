@@ -19,7 +19,7 @@ public class ActiveTermViewModel : INotifyPropertyChanged
         this.popupService = popupService;
         ActiveTerm = null;
         ActiveTermIsNotNull = false;
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
         LoadCommand = new Command(execute: async () => await LoadActiveTermAsync());
         DeleteClassCommand = new Command<Class>(execute: async (Class c) => await DeleteClass(c));
         EllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await EllipsisClicked(selectedClass));
@@ -79,7 +79,7 @@ public class ActiveTermViewModel : INotifyPropertyChanged
         LoadingPopup loadingPopup = new();
         Shell.Current.CurrentPage.ShowPopup(loadingPopup);
 
-        string? userEmail = await AuthService.RetrieveUserFromSecureStorage();
+        string? userEmail = await AuthService.RetrieveUserEmailFromSecureStorage();
         if (!string.IsNullOrWhiteSpace(userEmail)) activeUserEmail = userEmail;
 
         ActiveClasses.Clear();

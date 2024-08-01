@@ -24,7 +24,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
         EditClassCommand = new Command<Class>(execute: async (Class c) => await EditClass(c));
         FilterClassesCommand = new Command(execute: () => FilterClasses());
         EllipsisClickedCommand = new Command<Class>(execute: async (Class selectedClass) => await EllipsisClicked(selectedClass));
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
     }
 
     // Collections

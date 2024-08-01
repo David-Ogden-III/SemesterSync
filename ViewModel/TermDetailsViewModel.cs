@@ -17,7 +17,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
         SelectionChangedCommand = new Command(execute: () => SelectionChanged());
         RemoveClassCommand = new Command<Class>(execute: (Class classToDelete) => RemoveClass(classToDelete));
         SaveCommand = new Command(execute: async () => await Save());
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
     }
 
     // Collections

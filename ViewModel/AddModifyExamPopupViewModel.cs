@@ -12,7 +12,7 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
     public AddModifyExamPopupViewModel()
     {
 
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
     }
 
     private List<ExamType> ExamTypes { get; set; } = [];

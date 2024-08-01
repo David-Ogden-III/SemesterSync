@@ -58,7 +58,8 @@
                    TextColor="White" />
             <Entry BackgroundColor="White"
                    HeightRequest="35"
-                   Placeholder="Email" />
+                   Placeholder="Email"
+                   IsEnabled="False"/>
         </VerticalStackLayout>
 
         <VerticalStackLayout Padding="30,5,30,0"

@@ -18,7 +18,7 @@ public class DetailedClassViewModel : INotifyPropertyChanged
         LoadCommand = new Command(execute: async () => await Load());
         BackCommand = new Command(execute: async () => await Back());
         ShareCommand = new Command(execute: async () => await ShareTask());
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserFromSecureStorage()).Result;
+        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
     }
 
     // Helper Class

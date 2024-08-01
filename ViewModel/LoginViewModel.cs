@@ -1,5 +1,4 @@
 ﻿using CommunityToolkit.Maui.Alerts;
-using Plugin.Maui.Biometric;
 using SemesterSync.Models;
 using SemesterSync.Services;
 using SemesterSync.Views;
@@ -9,13 +8,11 @@ namespace SemesterSync.ViewModel;
 
 public class LoginViewModel : INotifyPropertyChanged
 {
-    private IBiometric biometric;
-    public LoginViewModel(IBiometric bio)
+    public LoginViewModel()
     {
         SubmitCommand = new Command(async () => await Submit());
         LoadCommand = new Command(async () => await Load());
         ChangeSelectedOperationCommand = new Command(() => ChangeSelectedOperation());
-        biometric = bio;
     }
 
     public string Email
@@ -126,15 +123,8 @@ public class LoginViewModel : INotifyPropertyChanged
 
     private async Task Submit()
     {
-        string errorMessage = ValidateInputs();
-        if (!string.IsNullOrWhiteSpace(errorMessage))
-        {
-            var toast = Toast.Make(errorMessage);
-
-            await toast.Show(cancellationTokenSource.Token);
-
-            return;
-        }
+        bool inputsContainError = await ValidateInputs();
+        if (inputsContainError) return;
 
         string enteredEmail = Email.ToLower();
         string enteredPassword = Password;
@@ -149,6 +139,7 @@ public class LoginViewModel : INotifyPropertyChanged
         }
         else
         {
+            enteredDTO.Email = enteredDTO.Email.Trim();
             enteredDTO.Password = ConfirmPassword;
             enteredDTO.FirstName = FirstName;
             enteredDTO.LastName = LastName;
@@ -185,25 +176,37 @@ public class LoginViewModel : INotifyPropertyChanged
         }
     }
 
-    private string ValidateInputs()
+    public async Task<bool> ValidateInputs()
     {
-        string toastText = string.Empty;
-        string requiredField = "All Fields Required";
-        if (Email.Length == 0) toastText = requiredField;
-        if (Password.Length == 0) toastText = requiredField;
+        string toastText = "All Fields Required";
+        bool inputsContainError = false;
+        if (Email.Length == 0) inputsContainError = true;
+        if (Password.Length == 0) inputsContainError = true;
 
         if (RegisterSelected)
         {
-            if (ConfirmPassword.Length == 0) toastText = requiredField;
-            if (FirstName.Length == 0) toastText = requiredField;
-            if (LastName.Length == 0) toastText = requiredField;
-            if (PhoneNumber.Length == 0) toastText = requiredField;
-            if (Major.Length == 0) toastText = requiredField;
+            if (ConfirmPassword.Length == 0) inputsContainError = true;
+            if (FirstName.Length == 0) inputsContainError = true;
+            if (LastName.Length == 0) inputsContainError = true;
+            if (PhoneNumber.Length == 0) inputsContainError = true;
+            if (Major.Length == 0) inputsContainError = true;
 
 
-            if (Password != ConfirmPassword && toastText.Length == 0) toastText = "Password Does Not Match";
+            if (Password != ConfirmPassword && inputsContainError == false)
+            {
+                inputsContainError = true;
+                toastText = "Passwords Do Not Match";
+            }
         }
-        return toastText;
+
+        if (inputsContainError)
+        {
+            var toast = Toast.Make(toastText);
+
+            await toast.Show(cancellationTokenSource.Token);
+        }
+
+        return inputsContainError;
     }
 
     public event PropertyChangedEventHandler? PropertyChanged;
@@ -225,68 +228,3 @@ public class LoginViewModel : INotifyPropertyChanged
     private bool _registerSelected = false;
     CancellationTokenSource cancellationTokenSource = new();
 }
-
-
-
-
-//    private async Task Load()
-//    {
-//        bool deviceHasPin = true;
-
-//#if ANDROID23_0_OR_GREATER
-//        var kg = Context.KeyguardService;
-//        if (MauiApplication.Current.GetSystemService(kg) is KeyguardManager keyGuardService)
-//        {
-//            deviceHasPin = keyGuardService.IsDeviceSecure;
-//        }
-//#endif
-
-//        if (!deviceHasPin || IsLoggedIn)
-//        {
-//            await Shell.Current.GoToAsync($"//{nameof(ActiveTerm)}");
-//        }
-
-//        List<BiometricType> types = await biometric.GetEnrolledBiometricTypesAsync();
-
-//        if (types.Contains(BiometricType.Face))
-//        {
-
-//        }
-//        else if (types.Contains(BiometricType.Fingerprint))
-//        {
-//            LoginImage = "fingerprint.png";
-//        }
-//        else
-//        {
-//            LoginImage = "keypad.png";
-//        }
-
-
-
-//    }
-//    public ImageSource LoginImage
-//    {
-//        get => _loginImage;
-//        set
-//        {
-//            _loginImage = value;
-//            OnPropertyChanged(nameof(LoginImage));
-//        }
-//    }
-
-//    private ImageSource _loginImage = "face_id.png";
-
-//var result = await biometric.AuthenticateAsync(new
-//            AuthenticationRequest()
-//{
-//    Title = "Login",
-//    NegativeText = "Cancel",
-//    AllowPasswordAuth = true
-//}, CancellationToken.None);
-
-
-//        if (result.Status == BiometricResponseStatus.Success)
-//        {
-//            IsLoggedIn = true;
-//            await Shell.Current.GoToAsync($"//{nameof(ActiveTerm)}");
-//        }
