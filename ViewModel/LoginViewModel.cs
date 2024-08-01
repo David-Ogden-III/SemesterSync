@@ -11,7 +11,7 @@ public class LoginViewModel : INotifyPropertyChanged
     public LoginViewModel()
     {
         SubmitCommand = new Command(async () => await Submit());
-        LoadCommand = new Command(async () => await Load());
+        LoadCommand = new Command( () => Load());
         ChangeSelectedOperationCommand = new Command(() => ChangeSelectedOperation());
     }
 
@@ -155,7 +155,7 @@ public class LoginViewModel : INotifyPropertyChanged
         }
     }
 
-    private async Task Load()
+    private void Load()
     {
 
     }
