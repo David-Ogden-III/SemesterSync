@@ -50,6 +50,7 @@ namespace SemesterSync
             builder.Services.AddTransientPopup<NotificationPopup, NotificationPopupViewModel>();
 
             builder.Services.AddSingleton<Profile>();
+            builder.Services.AddSingleton<ProfileViewModel>();
 
             builder.Services.AddSingleton<IBiometric>(BiometricAuthenticationService.Default);
 #if DEBUG

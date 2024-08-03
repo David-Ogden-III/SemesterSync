@@ -82,8 +82,8 @@ public static class MockData
     private static ExamType ExamType1 { get; set; } = new();
     private static ExamType ExamType2 { get; set; } = new();
 
-    private static UserDTO User1 { get; set; } = new("David", "Ogden", "davidogden@email.com", "555-555-555", "software engineering", new DateTime(2024, 08, 31), "password");
-    private static UserDTO User2 { get; set; } = new("David", "Ogden", "ogden@email.com", "555-555-555", "software engineering", new DateTime(2024, 08, 31), "password");
+    private static UserDTO User1 { get; set; } = new("David", "Ogden", "davidogden@email.com", "555-555-555", "software engineering", DateTime.SpecifyKind(new DateTime(2024, 08, 31), DateTimeKind.Utc), "password");
+    private static UserDTO User2 { get; set; } = new("David", "Ogden", "ogden@email.com", "555-555-555", "software engineering", DateTime.SpecifyKind(new DateTime(2024, 08, 31), DateTimeKind.Utc), "password");
 
     public static async Task CreateAllMockData()
     {
