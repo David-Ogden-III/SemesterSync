@@ -117,7 +117,8 @@
                             Grid.Column="1"
                             Stroke="Transparent">
                         <DatePicker BackgroundColor="White"
-                                    HeightRequest="35" />
+                                    HeightRequest="35"
+                                    Date="{Binding GraduationDate}"/>
                     </Border>
                 </Grid>
             </VerticalStackLayout>
