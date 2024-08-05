@@ -1,11 +1,7 @@
 ﻿using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Views;
 using SemesterSync.Data;
 using SemesterSync.Models;
 using SemesterSync.Services;
-using SemesterSync.Views;
-using System.Collections.ObjectModel;
 using System.ComponentModel;
 using System.Diagnostics;
 
@@ -89,12 +85,12 @@ public class ProfileViewModel : INotifyPropertyChanged
     private async Task Load()
     {
         ActiveUser = await DbContext.GetFilteredItemAsync<User>(user => user.Email == ActiveUserEmail);
-
+        
         FirstName = ActiveUser.FirstName;
         LastName = ActiveUser.LastName;
         PhoneNumber = ActiveUser.PhoneNumber;
         Major = ActiveUser.Major;
-        GraduationDate = DateTime.SpecifyKind(ActiveUser.GraduationDate,DateTimeKind.Utc);
+        GraduationDate = DateTime.SpecifyKind(ActiveUser.GraduationDate, DateTimeKind.Utc);
     }
 
     private async Task SaveUser()
