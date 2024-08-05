@@ -151,6 +151,7 @@ public class LoginViewModel : INotifyPropertyChanged
 
         if (loginSuccess || registerSuccess)
         {
+            ClearInputs();
             await Shell.Current.GoToAsync($"//{nameof(ActiveTerm)}");
         }
     }
@@ -174,6 +175,18 @@ public class LoginViewModel : INotifyPropertyChanged
             ActionLabel = "Register";
             SelectorText = "Login";
         }
+    }
+
+    private void ClearInputs()
+    {
+        Email = String.Empty;
+        Password = String.Empty;
+        FirstName = String.Empty;
+        LastName = String.Empty;
+        PhoneNumber = String.Empty;
+        Major = String.Empty;
+        ConfirmPassword = String.Empty;
+        GraduationDate = DateTime.Now;
     }
 
     public async Task<bool> ValidateInputs()
