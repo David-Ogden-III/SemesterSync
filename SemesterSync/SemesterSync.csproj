@@ -1,0 +1,135 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFrameworks>net8.0-android</TargetFrameworks>
+
+		<OutputType>Exe</OutputType>
+		<RootNamespace>SemesterSync</RootNamespace>
+		<UseMaui>true</UseMaui>
+		<SingleProject>true</SingleProject>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+
+		<!-- Display name -->
+		<ApplicationTitle>SemesterSync</ApplicationTitle>
+
+		<!-- App Identifier -->
+		<ApplicationId>com.companyname.SemesterSync</ApplicationId>
+
+		<!-- Versions -->
+		<ApplicationDisplayVersion>1.0</ApplicationDisplayVersion>
+		<ApplicationVersion>1</ApplicationVersion>
+
+		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'android'">21.0</SupportedOSPlatformVersion>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- App Icon -->
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#512BD4" />
+
+		<!-- Splash Screen -->
+		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#512BD4" BaseSize="128,128" />
+
+		<!-- Images -->
+		<MauiImage Include="Resources\Images\*" />
+		<MauiImage Update="Resources\Images\dotnet_bot.png" Resize="True" BaseSize="300,185" />
+
+		<!-- Custom Fonts -->
+		<MauiFont Include="Resources\Fonts\*" />
+
+		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
+		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Platforms\Android\Resources\xml\auto_backup_rules.xml" />
+		<None Remove="Resources\Images\chevron_down.svg" />
+		<None Remove="Resources\Images\ellipsis.svg" />
+		<None Remove="Resources\Images\face_id.svg" />
+		<None Remove="Resources\Images\fingerprint.svg" />
+		<None Remove="Resources\Images\keypad.svg" />
+		<None Remove="Resources\Images\left_arrow.svg" />
+		<None Remove="Resources\Images\x_mark.svg" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="9.0.2" />
+		<PackageReference Include="Microsoft.Maui.Controls" Version="8.0.71" />
+		<PackageReference Include="Microsoft.Maui.Controls.Compatibility" Version="8.0.71" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="8.0.0" />
+		<PackageReference Include="Plugin.LocalNotification" Version="11.1.3" />
+		<PackageReference Include="sqlite-net-pcl" Version="1.9.172" />
+		<PackageReference Include="SQLitePCLRaw.bundle_green" Version="2.1.8" />
+	</ItemGroup>
+
+	<ItemGroup>
+	  <ProjectReference Include="..\DataLibrary\DataLibrary.csproj" />
+	  <ProjectReference Include="..\ModelLibrary\ModelLibrary.csproj" />
+	  <ProjectReference Include="..\ServiceLibrary\ServiceLibrary.csproj" />
+	  <ProjectReference Include="..\ViewModelLibrary\ViewModelLibrary.csproj" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Compile Update="Views\Login.xaml.cs">
+			<DependentUpon>Login.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\TermDetails.xaml.cs">
+			<DependentUpon>TermDetails.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\AllTerms.xaml.cs">
+			<DependentUpon>AllTerms.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\ActiveTerm.xaml.cs">
+			<DependentUpon>ActiveTerm.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\AllClasses.xaml.cs">
+			<DependentUpon>AllClasses.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Views\UpdateClass.xaml.cs">
+			<DependentUpon>UpdateClass.xaml</DependentUpon>
+		</Compile>
+	</ItemGroup>
+
+	<ItemGroup>
+		<MauiXaml Update="LoadingPopup.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\AddModifyExamPopup.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\DetailedClass.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Login.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\NotificationPopup.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\TermDetails.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\AllTerms.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\AllClasses.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\Profile.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Views\UpdateClass.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Resources\Controls\Header.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+	</ItemGroup>
+
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties XamarinHotReloadDebuggerTimeoutExceptionC971_OgdenHideInfoBar="True" />
+		</VisualStudio>
+	</ProjectExtensions>
+
+</Project>
