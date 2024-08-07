@@ -187,5 +187,5 @@ public class LoginViewModelTest
     //    bool newUserCreated = await vm.Submit();
 
     //    Assert.True(newUserCreated);
-    }
+    //}
 }
