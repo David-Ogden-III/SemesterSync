@@ -106,6 +106,9 @@
 		<MauiXaml Update="Views\NotificationPopup.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Views\Progress.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Views\TermDetails.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
