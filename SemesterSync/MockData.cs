@@ -233,8 +233,8 @@ public static class MockData
     private static async Task CreateUser()
     {
         await DbContext.DeleteAllItemsAsync<User>();
-        bool userCreated = await AuthService.CreateUser(User1);
         await AuthService.CreateUser(User2);
+        bool userCreated = await AuthService.CreateUser(User1);
         Debug.WriteLineIf(userCreated, "User Created Succesfully");
     }
 }
