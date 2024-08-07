@@ -87,10 +87,10 @@ public static class DbContext
         return await db.DeleteAsync(item) > 0;
     }
 
-    public static async Task<bool> DeleteAllItemsAsync<TTable>() where TTable : class, new()
+    public static async Task<int> DeleteAllItemsAsync<TTable>() where TTable : class, new()
     {
         await Init();
-        return await db.DeleteAllAsync<TTable>() > 0;
+        return await db.DeleteAllAsync<TTable>();
     }
 
 
