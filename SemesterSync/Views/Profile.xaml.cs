@@ -1,5 +1,4 @@
 using ViewModelLibrary;
-using System.Diagnostics;
 
 namespace SemesterSync.Views;
 
@@ -13,15 +12,15 @@ public partial class Profile : ContentPage
 
     private async void Ellipsis_Clicked(object sender, EventArgs e)
     {
-        string action = await DisplayActionSheet("Select", "Cancel", null, "Progress Reports", "Logout");
+        string action = await DisplayActionSheet("Select", "Cancel", null, "Status Reports", "Logout");
 
         switch (action)
         {
-            case "Progress Reports":
-                Debug.WriteLine("prog repo");
+            case "Status Reports":
+                await Shell.Current.GoToAsync(nameof(Progress));
                 break;
             case "Logout":
-                SecureStorage.Remove("ActiveUser");
+                bool removed = SecureStorage.Remove("activeUser");
                 await Shell.Current.GoToAsync($"//{nameof(Login)}");
                 break;
         }
