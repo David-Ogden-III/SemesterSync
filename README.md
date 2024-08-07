@@ -3,9 +3,9 @@
 **B-**
 
 1. 
-    - Inheritance: SemesterSync/ViewModelLibrary/ANY_VIEWMODEL. All viewmodels inherit from INotifyPropertyChanged
-    - Polymorphism: SemesterSync/ViewModelLibrary/NotificationPopupViewModel. The OnAppearing method can take a Class or DetailedExam as a parameter and display information accordingly.
-    - Encapsulation: SemesterSync/ViewModelLibrary/ANY_VIEWMODEL. All viewmodels show encapsulation by having private fields that are accessed with public properties.
+    - Inheritance: `SemesterSync/ViewModelLibrary/ANY_VIEWMODEL`. All viewmodels inherit from INotifyPropertyChanged
+    - Polymorphism: `SemesterSync/ViewModelLibrary/NotificationPopupViewModel`. The OnAppearing method can take a Class or DetailedExam as a parameter and display information accordingly.
+    - Encapsulation: `SemesterSync/ViewModelLibrary/ANY_VIEWMODEL`. All viewmodels show encapsulation by having private fields that are accessed with public properties.
 
 2. Search Functionality: On All Terms page, users can search by class name or term name. On All Classes page, users can search by class name.
 
