@@ -50,6 +50,9 @@ namespace SemesterSync
             builder.Services.AddSingleton<Profile>();
             builder.Services.AddSingleton<ProfileViewModel>();
 
+            builder.Services.AddSingleton<Progress>();
+            builder.Services.AddSingleton<ProgressViewModel>();
+
 #if DEBUG
             builder.Logging.AddDebug();
             Task.Run(async () => await MockData.CreateAllMockData());
