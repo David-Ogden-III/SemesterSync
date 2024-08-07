@@ -6,7 +6,7 @@ public class LoginViewModelTest
 {
     // ValidateInputs Method Tests
     [Fact]
-    public async Task ValidateInputs_AllPropsHaveData_RegisterSelectedTrue_ReturnsNullString()
+    public async Task ValidateInputs_AllPropsHaveData_RegisterSelectedTrue_ReturnsFalse()
     {
         LoginViewModel vm = new()
         {
@@ -27,7 +27,7 @@ public class LoginViewModelTest
     }
 
     [Fact]
-    public async Task ValidateInputs_EmailPasswordHaveData_RegisterSelectedFalse_ReturnNullString()
+    public async Task ValidateInputs_EmailPasswordHaveData_RegisterSelectedFalse_ReturnsFalse()
     {
         LoginViewModel vm = new()
         {
@@ -43,7 +43,7 @@ public class LoginViewModelTest
     }
 
     [Fact]
-    public async Task ValidateInputs_PasswordsDontMatch_RegisterSelectedTrue_ReturnNonNullString()
+    public async Task ValidateInputs_PasswordsDontMatch_RegisterSelectedTrue_ReturnsTrue()
     {
         LoginViewModel vm = new()
         {
@@ -64,7 +64,7 @@ public class LoginViewModelTest
     }
 
     [Fact]
-    public async Task ValidateInputs_EmailNull_RegisterSelectedFalse_ReturnNonNullString()
+    public async Task ValidateInputs_EmailNull_RegisterSelectedFalse_ReturnsTrue()
     {
         LoginViewModel vm = new()
         {
@@ -166,5 +166,26 @@ public class LoginViewModelTest
         vm.ChangeSelectedOperationCommand.Execute(null);
 
         Assert.Equal("Register", vm.SelectorText);
+    }
+
+    //[Fact]
+    //public async Task Submit_InputsValid_ReturnTrue()
+    //{
+    //    LoginViewModel vm = new()
+    //    {
+    //        RegisterSelected = true,
+
+    //        FirstName = "John",
+    //        LastName = "Doe",
+    //        Email = "johndoe@email.com",
+    //        Password = "password",
+    //        ConfirmPassword = "password",
+    //        PhoneNumber = "1234567890",
+    //        Major = "Computer Science"
+    //    };
+
+    //    bool newUserCreated = await vm.Submit();
+
+    //    Assert.True(newUserCreated);
     }
 }
