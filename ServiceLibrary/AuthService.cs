@@ -10,7 +10,7 @@ public static class AuthService
     private static byte[] HashPassword(string plainTextPassword, byte[] salt)
     {
         byte[] passwordBytes = Encoding.UTF8.GetBytes(plainTextPassword);
-        byte[] saltedPassword = passwordBytes.Concat(salt).ToArray();
+        byte[] saltedPassword = [.. passwordBytes, .. salt];
         byte[] hashedPassword = SHA256.HashData(saltedPassword);
 
         return hashedPassword;
