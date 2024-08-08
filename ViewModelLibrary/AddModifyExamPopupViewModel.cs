@@ -11,12 +11,10 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
     private string? activeUserEmail;
     public AddModifyExamPopupViewModel()
     {
-
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
     }
 
-    private List<ExamType> ExamTypes { get; set; } = [];
-    private bool InitialExamTypeIsToggled { get; set; }
+    public List<ExamType> ExamTypes { get; set; } = [];
+    public bool InitialExamTypeIsToggled { get; set; }
 
     public DetailedExam? SelectedExam { get; set; }
 
@@ -86,6 +84,7 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 
     public async Task OnLoading(DetailedExam selectedExam)
     {
+        activeUserEmail = await AuthService.RetrieveUserEmailFromSecureStorage();
         ExamTypes = await DbContext.GetAllAsync<ExamType>();
         SelectedExam = selectedExam;
         ExamName = selectedExam.ExamName;
@@ -100,31 +99,16 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 
     public async Task OnLoading()
     {
+        activeUserEmail = await AuthService.RetrieveUserEmailFromSecureStorage();
         ExamTypes = await DbContext.GetAllAsync<ExamType>();
     }
 
     public async Task<DetailedExam?> Save()
     {
-        bool startLessThanEnd = new DateTime(DateOnly.FromDateTime(StartDate), TimeOnly.FromTimeSpan(StartTime)) < new DateTime(DateOnly.FromDateTime(EndDate), TimeOnly.FromTimeSpan(EndTime));
-
-        if (!startLessThanEnd)
+        bool inputsAreValid = await ValidateInputs();
+        if (!inputsAreValid)
         {
-
-            string toastText = "End date must be after start date";
-            var toast = Toast.Make(toastText);
-
-            await toast.Show(cancellationTokenSource.Token);
-
-            return null;
-        }
-        if (ExamName.Length <= 0)
-        {
-            string toastText = "Exam Name is Required";
-            var toast = Toast.Make(toastText);
-
-            await toast.Show(cancellationTokenSource.Token);
-
-            return null;
+            return null;    
         }
 
         SelectedExam ??= new(new Exam(), "")
@@ -168,6 +152,36 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
         if (ExamTypeIsToggled != InitialExamTypeIsToggled) return true;
 
         return false;
+    }
+    public async Task<bool> ValidateInputs()
+    {
+        string toastText = "End date must be after start date";
+        bool inputsAreValid = true;
+
+        DateOnly startDate = DateOnly.FromDateTime(StartDate);
+        TimeOnly startTime = TimeOnly.FromTimeSpan(StartTime);
+        DateTime startDateTime = new DateTime(startDate, startTime);
+
+        DateOnly endDate = DateOnly.FromDateTime(EndDate);
+        TimeOnly endTime = TimeOnly.FromTimeSpan(EndTime);
+        DateTime endDateTime = new DateTime(endDate, endTime);
+
+        inputsAreValid = startDateTime < endDateTime;
+
+        if (inputsAreValid && String.IsNullOrWhiteSpace(ExamName))
+        {
+            inputsAreValid = false;
+            toastText = "Exam Name is Required";
+        }
+
+        if (!inputsAreValid)
+        {
+            var toast = Toast.Make(toastText);
+
+            await toast.Show(cancellationTokenSource.Token);
+        }
+
+        return inputsAreValid;
     }
 
     // Other
