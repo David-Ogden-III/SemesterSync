@@ -11,7 +11,7 @@ namespace ViewModelLibrary;
 public class AllClassesViewModel : INotifyPropertyChanged
 {
     private readonly IPopupService popupService;
-    private readonly string? activeUserEmail;
+    private string? activeUserEmail;
     public AllClassesViewModel(IPopupService popupService)
     {
         this.popupService = popupService;
@@ -19,7 +19,6 @@ public class AllClassesViewModel : INotifyPropertyChanged
         LoadCommand = new Command(execute: async () => await LoadClasses());
         DeleteClassCommand = new Command<Class>(execute: async (Class c) => await DeleteClass(c));
         FilterClassesCommand = new Command(execute: () => FilterClasses());
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
     }
 
     // Collections
@@ -80,6 +79,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
     {
         Classes.Clear();
         ClassesSourceOfTruth.Clear();
+        activeUserEmail = await AuthService.RetrieveUserEmailFromSecureStorage();
 
         List<Class> dbClasses = (await DbContext.GetFilteredListAsync<Class>(c => c.CreatedBy == activeUserEmail)).ToList();
 
@@ -90,7 +90,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
         }
     }
 
-    private void FilterClasses()
+    public void FilterClasses()
     {
         if (String.IsNullOrWhiteSpace(SearchParams))
         {
