@@ -13,6 +13,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
 {
     private readonly IPopupService popupService;
     private string? activeUserEmail;
+    private readonly AuthService authService = AuthService.GetInstance();
     public AllTermsViewModel(IPopupService popupService)
     {
         this.popupService = popupService;
@@ -20,7 +21,6 @@ public class AllTermsViewModel : INotifyPropertyChanged
         DeleteTermCommand = new Command<ClassGroup>(execute: async (ClassGroup cg) => await DeleteTerm(cg));
         DeleteClassCommand = new Command<Class>(execute: async (Class c) => await DeleteClass(c));
         FilterTermsCommand = new Command(execute: () => FilterTerms());
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
     }
 
 
@@ -86,6 +86,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
 
     private async Task LoadClasses()
     {
+        activeUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
         Classes.Clear();
         ClassesSourceOfTruth.Clear();
         List<Term> allTermResults = (await DbContext.GetFilteredListAsync<Term>(term => term.CreatedBy == activeUserEmail)).ToList();
@@ -142,7 +143,7 @@ public class AllTermsViewModel : INotifyPropertyChanged
         else
         {
             string param = SearchParams.ToLower().Trim();
-            var result = Classes.Where(c => c.Term.TermName.ToLower().Trim().Contains(param) || c.ToList().Exists(cl => cl.ClassName.ToLower().Trim().Contains(param)));
+            var result = ClassesSourceOfTruth.Where(c => c.Term.TermName.ToLower().Trim().Contains(param) || c.ToList().Exists(cl => cl.ClassName.ToLower().Trim().Contains(param)));
             Classes = result.ToObservableCollection<ClassGroup>();
         }
     }

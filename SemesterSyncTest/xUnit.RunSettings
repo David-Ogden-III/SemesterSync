@@ -1,0 +1,6 @@
+<RunSettings>
+  <xUnit>
+    <AppDomain>denied</AppDomain>
+    <ParallelizeTestCollections>false</ParallelizeTestCollections>
+  </xUnit>
+</RunSettings>

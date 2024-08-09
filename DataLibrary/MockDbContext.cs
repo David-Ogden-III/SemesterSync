@@ -6,7 +6,7 @@ namespace DataLibrary;
 
 public static class MockDbContext
 {
-    public static SQLiteAsyncConnection? db = null;
+    public static SQLiteAsyncConnection? db;
 
     public const string DatabaseFilename = "WGUScheduler.db3";
 

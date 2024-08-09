@@ -7,6 +7,7 @@ namespace ViewModelLibrary;
 
 public class LoginViewModel : INotifyPropertyChanged
 {
+    private readonly AuthService authService = AuthService.GetInstance();
     public LoginViewModel()
     {
         LoadCommand = new Command( () => Load());
@@ -130,7 +131,7 @@ public class LoginViewModel : INotifyPropertyChanged
 
         if (!RegisterSelected)
         {
-            loginSuccess = await AuthService.AuthenticateUser(enteredDTO);
+            loginSuccess = await authService.AuthenticateUser(enteredDTO);
         }
         else
         {
@@ -141,12 +142,29 @@ public class LoginViewModel : INotifyPropertyChanged
             enteredDTO.PhoneNumber = PhoneNumber;
             enteredDTO.Major = Major;
             enteredDTO.GraduationDate = GraduationDate.ToUniversalTime();
-            registerSuccess = await AuthService.CreateUser(enteredDTO);
+
+            registerSuccess = await authService.CreateUser(enteredDTO);
         }
 
         if (loginSuccess || registerSuccess)
         {
+            await authService.AddUserEmailToSecureStorage(enteredDTO.Email);
             ClearInputs();
+            if (RegisterSelected) ChangeSelectedOperationCommand.Execute(null);
+        }
+        else if (!loginSuccess)
+        {
+            string toastText = "Incorrect Username or Password";
+            var toast = Toast.Make(toastText);
+
+            await toast.Show(cancellationTokenSource.Token);
+        }
+        else if (!registerSuccess)
+        {
+            string toastText = "There was an issue creating your account";
+            var toast = Toast.Make(toastText);
+
+            await toast.Show(cancellationTokenSource.Token);
         }
         return loginSuccess || registerSuccess;
     }

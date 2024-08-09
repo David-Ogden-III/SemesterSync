@@ -31,7 +31,7 @@ public partial class AllClasses : ContentPage
                 viewModel.DeleteClassCommand.Execute(selectedClass);
                 break;
             case "Detailed View":
-                await NavigateToUpdateClass(selectedClass);
+                await NavigateToDetailedView(selectedClass);
                 break;
             case "Set Notification":
                 viewModel.ShowPopup(selectedClass);

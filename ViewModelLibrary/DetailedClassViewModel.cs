@@ -11,12 +11,12 @@ public class DetailedClassViewModel : INotifyPropertyChanged
 {
 
     private string? activeUserEmail;
+    private readonly AuthService authService = AuthService.GetInstance();
     public DetailedClassViewModel()
     {
         LoadCommand = new Command(execute: async () => await Load());
         BackCommand = new Command(execute: async () => await Back());
         ShareCommand = new Command(execute: async () => await ShareTask());
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
     }
 
     // Helper Class
@@ -69,6 +69,7 @@ public class DetailedClassViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task Load()
     {
+        activeUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
         if (SelectedClass == null)
         {
             await Back();

@@ -3,21 +3,21 @@ using ModelLibrary;
 
 namespace ServiceLibrary;
 
-public class AuthService : AuthServiceTemplate
+public class FakeAuthService : AuthServiceTemplate
 {
-    private AuthService() { }
+    private FakeAuthService() { }
 
-    private static AuthService? _instance;
+    private static FakeAuthService? _instance;
 
     private static readonly object _instanceLock = new();
 
-    public static AuthService GetInstance()
+    public static FakeAuthService GetInstance()
     {
         if (_instance == null)
         {
             lock (_instanceLock)
             {
-                _instance ??= new AuthService();
+                _instance ??= new FakeAuthService();
             }
         }
         return _instance;
@@ -25,14 +25,14 @@ public class AuthService : AuthServiceTemplate
 
     protected override async Task<User> GetUser(UserDTO userDTO)
     {
-        User user = await DbContext.GetFilteredItemAsync<User>(user => user.Email == userDTO.Email);
+        User user = await MockDbContext.GetFilteredItemAsync<User>(user => user.Email == userDTO.Email);
 
         return user;
     }
 
     protected override async Task<bool> AddUserToDB(User newUser)
     {
-        bool userCreated = await DbContext.AddItemAsync(newUser);
+        bool userCreated = await MockDbContext.AddItemAsync(newUser);
         return userCreated;
     }
 }

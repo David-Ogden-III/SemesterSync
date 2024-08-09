@@ -7,11 +7,6 @@
              xmlns:viewmodel="clr-namespace:ViewModelLibrary;assembly=ViewModelLibrary"
              x:DataType="viewmodel:LoginViewModel">
 
-    <ContentPage.Behaviors>
-        <toolkit:EventToCommandBehavior EventName="Appearing"
-                                        Command="{Binding LoadCommand}" />
-    </ContentPage.Behaviors>
-
     <Grid RowDefinitions="300, *">
         <Grid RowDefinitions="300">
             <Grid.Background>

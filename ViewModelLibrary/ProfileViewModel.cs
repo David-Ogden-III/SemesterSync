@@ -9,13 +9,22 @@ namespace ViewModelLibrary;
 
 public class ProfileViewModel : INotifyPropertyChanged
 {
+    private readonly AuthService authService = AuthService.GetInstance();
     public ProfileViewModel()
     {
         LoadCommand = new Command(execute: async () => await Load());
         SaveUserCommand = new Command(execute: async () => await SaveUser());
     }
 
-    public string? ActiveUserEmail { get; } = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
+    public string? ActiveUserEmail
+    {
+        get => _activeUserEmail;
+        set
+        {
+            _activeUserEmail = value;
+            OnPropertyChanged(nameof(ActiveUserEmail));
+        }
+    }
     public User ActiveUser { get; set; }
     public string FirstName
     {
@@ -84,6 +93,7 @@ public class ProfileViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task Load()
     {
+        ActiveUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
         ActiveUser = await DbContext.GetFilteredItemAsync<User>(user => user.Email == ActiveUserEmail);
         
         FirstName = ActiveUser.FirstName;
@@ -139,6 +149,7 @@ public class ProfileViewModel : INotifyPropertyChanged
     private string _phoneNumber = string.Empty;
     private string _major = string.Empty;
     private DateTime _graduationDate = DateTime.Now;
+    private string? _activeUserEmail = String.Empty;
 
     readonly CancellationTokenSource cancellationTokenSource = new();
 }

@@ -9,6 +9,7 @@ namespace ViewModelLibrary;
 
 public class ProgressViewModel : INotifyPropertyChanged
 {
+    private readonly AuthService authService = AuthService.GetInstance();
     public ProgressViewModel()
     {
         LoadCommand = new Command(execute: async () => await Load());
@@ -17,7 +18,7 @@ public class ProgressViewModel : INotifyPropertyChanged
 
     }
 
-    public static string? ActiveUserEmail { get; } = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
+    public static string? ActiveUserEmail { get; set; }
     public List<Class> Classes { get; set; } = [];
     public List<TermSchedule> TermSchedules { get; set; } = [];
     public List<Term> Terms { get; set; } = [];
@@ -76,6 +77,11 @@ public class ProgressViewModel : INotifyPropertyChanged
     
     private async Task Load()
     {
+        Classes.Clear();
+        TermSchedules.Clear();
+        Terms.Clear();
+        AllTermsReportGroup.Clear();
+        ActiveUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
         Classes = (await DbContext.GetFilteredListAsync<Class>(c => c.CreatedBy == ActiveUserEmail)).ToList();
         TermSchedules = (await DbContext.GetFilteredListAsync<TermSchedule>(ts => ts.CreatedBy == ActiveUserEmail)).ToList();
         Terms = (await DbContext.GetFilteredListAsync<Term>(term => term.CreatedBy == ActiveUserEmail)).ToList();

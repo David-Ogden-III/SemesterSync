@@ -167,25 +167,4 @@ public class LoginViewModelTest
 
         Assert.Equal("Register", vm.SelectorText);
     }
-
-    //[Fact]
-    //public async Task Submit_InputsValid_ReturnTrue()
-    //{
-    //    LoginViewModel vm = new()
-    //    {
-    //        RegisterSelected = true,
-
-    //        FirstName = "John",
-    //        LastName = "Doe",
-    //        Email = "johndoe@email.com",
-    //        Password = "password",
-    //        ConfirmPassword = "password",
-    //        PhoneNumber = "1234567890",
-    //        Major = "Computer Science"
-    //    };
-
-    //    bool newUserCreated = await vm.Submit();
-
-    //    Assert.True(newUserCreated);
-    //}
 }

@@ -9,6 +9,7 @@ namespace ViewModelLibrary;
 public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 {
     private string? activeUserEmail;
+    private readonly AuthService authService = AuthService.GetInstance();
     public AddModifyExamPopupViewModel()
     {
     }
@@ -84,7 +85,7 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 
     public async Task OnLoading(DetailedExam selectedExam)
     {
-        activeUserEmail = await AuthService.RetrieveUserEmailFromSecureStorage();
+        activeUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
         ExamTypes = await DbContext.GetAllAsync<ExamType>();
         SelectedExam = selectedExam;
         ExamName = selectedExam.ExamName;
@@ -99,7 +100,7 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
 
     public async Task OnLoading()
     {
-        activeUserEmail = await AuthService.RetrieveUserEmailFromSecureStorage();
+        activeUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
         ExamTypes = await DbContext.GetAllAsync<ExamType>();
     }
 

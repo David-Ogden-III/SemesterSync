@@ -10,6 +10,7 @@ namespace ViewModelLibrary;
 
 public class AllClassesViewModel : INotifyPropertyChanged
 {
+    private readonly AuthService authService = AuthService.GetInstance();
     private readonly IPopupService popupService;
     private string? activeUserEmail;
     public AllClassesViewModel(IPopupService popupService)
@@ -79,7 +80,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
     {
         Classes.Clear();
         ClassesSourceOfTruth.Clear();
-        activeUserEmail = await AuthService.RetrieveUserEmailFromSecureStorage();
+        activeUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
 
         List<Class> dbClasses = (await DbContext.GetFilteredListAsync<Class>(c => c.CreatedBy == activeUserEmail)).ToList();
 
@@ -90,7 +91,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
         }
     }
 
-    public void FilterClasses()
+    private void FilterClasses()
     {
         if (String.IsNullOrWhiteSpace(SearchParams))
         {
@@ -99,7 +100,7 @@ public class AllClassesViewModel : INotifyPropertyChanged
         else
         {
             string param = SearchParams.ToLower().Trim();
-            var result = Classes.Where(c => c.ClassName.ToLower().Trim().Contains(param));
+            var result = ClassesSourceOfTruth.Where(c => c.ClassName.ToLower().Trim().Contains(param));
             Classes = result.ToObservableCollection<Class>();
         }
     }

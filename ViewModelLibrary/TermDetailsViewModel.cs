@@ -10,6 +10,7 @@ namespace ViewModelLibrary;
 [QueryProperty(nameof(SelectedCG), "SelectedCG")]
 public class TermDetailsViewModel : INotifyPropertyChanged
 {
+    private readonly AuthService authService = AuthService.GetInstance();
     public TermDetailsViewModel()
     {
         LoadCommand = new Command(execute: async () => await Load());
@@ -110,7 +111,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task Load()
     {
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
+        activeUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
         var allClasses = await DbContext.GetFilteredListAsync<Class>(c =>  c.CreatedBy == activeUserEmail);
         AllClasses = allClasses.AsEnumerable();
         if (SelectedCG != null)

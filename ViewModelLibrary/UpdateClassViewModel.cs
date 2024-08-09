@@ -15,14 +15,14 @@ namespace ViewModelLibrary;
 public class UpdateClassViewModel : INotifyPropertyChanged
 {
     private readonly IPopupService popupService;
-    private readonly string? activeUserEmail;
+    private string? activeUserEmail;
+    private readonly AuthService authService = AuthService.GetInstance();
     public UpdateClassViewModel(IPopupService popupService)
     {
         this.popupService = popupService;
         LoadCommand = new Command(execute: async () => await Load());
         BackCommand = new Command(execute: async () => await Back());
         SaveCommand = new Command(execute: async () => await Save());
-        activeUserEmail = Task.Run(() => AuthService.RetrieveUserEmailFromSecureStorage()).Result;
         ExamEllipsisClickedCommand = new Command<DetailedExam>(execute: async (DetailedExam selectedExam) => await ExamEllipsisClicked(selectedExam));
         EditExamCommand = new Command<DetailedExam>(execute: async (DetailedExam selectedExam) => await EditExam(selectedExam));
         AddExamCommand = new Command(execute: async () => await AddExam());
@@ -208,6 +208,7 @@ public class UpdateClassViewModel : INotifyPropertyChanged
     // Command Definitions
     private async Task Load()
     {
+        activeUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
         if (SelectedClass != null)
         {
             Instructor = await DbContext.GetFilteredItemAsync<Instructor>(instructor => instructor.Id == SelectedClass.InstructorId && instructor.CreatedBy == activeUserEmail);
@@ -351,13 +352,13 @@ public class UpdateClassViewModel : INotifyPropertyChanged
 
 
     // Helper Methods
-    private async Task<bool> InputsAreValid()
+    public async Task<bool> InputsAreValid()
     {
-        bool classNameIsValid = ClassName.Length > 0;
-        bool selectedStatusIsValid = SelectedStatus != null;
-        bool instructorNameIsValid = InstructorName.Length > 0;
-        bool instructorPhoneNumIsValid = InstructorPhoneNum.Length > 0;
-        bool instructorEmailIsValid = InstructorEmail.Length > 0;
+        bool classNameIsValid = !String.IsNullOrWhiteSpace(ClassName);
+        bool selectedStatusIsValid = !String.IsNullOrWhiteSpace(SelectedStatus);
+        bool instructorNameIsValid = !String.IsNullOrWhiteSpace(InstructorName);
+        bool instructorPhoneNumIsValid = !String.IsNullOrWhiteSpace(InstructorEmail);
+        bool instructorEmailIsValid = !String.IsNullOrWhiteSpace(InstructorEmail);
         bool startLessThanEnd = StartDate < EndDate;
 
         bool allInputsValid = classNameIsValid && selectedStatusIsValid && instructorNameIsValid && instructorPhoneNumIsValid && instructorEmailIsValid;
@@ -439,8 +440,9 @@ public class UpdateClassViewModel : INotifyPropertyChanged
         return existingInstructor.Id;
     }
 
-    private bool ClassDetailsChanged()
+    public bool ClassDetailsChanged()
     {
+        if (SelectedClass == null) return true;
         if (SelectedClass.ClassName != ClassName) return true;
         if (SelectedClass.Status != SelectedStatus) return true;
         if (SelectedClass.StartDate != StartDate) return true;
