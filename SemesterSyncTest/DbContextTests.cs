@@ -115,7 +115,7 @@ public class DbContextTests
         };
         await MockDbContext.AddItemAsync(newClass);
 
-        Class retrievedClass = await MockDbContext.GetFilteredItemAsync<Class>(c  => c.ClassName == "Test123" && c.CreatedBy == "Tester");
+        Class retrievedClass = await MockDbContext.GetFilteredItemAsync<Class>(c => c.ClassName == "Test123" && c.CreatedBy == "Tester");
 
         Assert.NotNull(retrievedClass);
 

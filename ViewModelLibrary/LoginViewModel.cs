@@ -10,7 +10,7 @@ public class LoginViewModel : INotifyPropertyChanged
     private readonly AuthService authService = AuthService.GetInstance();
     public LoginViewModel()
     {
-        LoadCommand = new Command( () => Load());
+        LoadCommand = new Command(() => Load());
         ChangeSelectedOperationCommand = new Command(() => ChangeSelectedOperation());
     }
 

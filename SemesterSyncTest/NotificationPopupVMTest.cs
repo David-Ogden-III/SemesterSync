@@ -42,7 +42,7 @@ public class NotificationPopupVMTest
 
         vm.OnAppearing(newClass1);
 
-        Assert.Equal(newClass1.ClassName,vm.Title);
+        Assert.Equal(newClass1.ClassName, vm.Title);
     }
 
     [Fact]
@@ -84,6 +84,6 @@ public class NotificationPopupVMTest
 
         vm.OnAppearing(newDetailedExam);
 
-        Assert.Equal(newDetailedExam.ExamName,vm.Title);
+        Assert.Equal(newDetailedExam.ExamName, vm.Title);
     }
 }

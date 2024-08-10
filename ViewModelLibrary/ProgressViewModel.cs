@@ -1,9 +1,9 @@
-﻿using System.Collections.ObjectModel;
-using System.ComponentModel;
-using CommunityToolkit.Maui.Core.Extensions;
+﻿using CommunityToolkit.Maui.Core.Extensions;
 using DataLibrary;
 using ModelLibrary;
 using ServiceLibrary;
+using System.Collections.ObjectModel;
+using System.ComponentModel;
 
 namespace ViewModelLibrary;
 
@@ -74,7 +74,7 @@ public class ProgressViewModel : INotifyPropertyChanged
     public Command BackCommand { get; }
     public Command LoadCommand { get; }
     public Command SelectionChangedCommand { get; }
-    
+
     private async Task Load()
     {
         Classes.Clear();
@@ -101,7 +101,7 @@ public class ProgressViewModel : INotifyPropertyChanged
             AllTermsReportGroup.Add(newRG);
         }
 
-        SelectedTerm = PickerOptions[0];        
+        SelectedTerm = PickerOptions[0];
     }
 
     private static async Task Back()
@@ -148,5 +148,5 @@ public class ProgressViewModel : INotifyPropertyChanged
 
 
 
-    
+
 }

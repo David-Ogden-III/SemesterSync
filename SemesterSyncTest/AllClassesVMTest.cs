@@ -27,7 +27,7 @@ public class AllClassesVMTest
         AllClassesViewModel vm = new(null)
         {
             SearchParams = "test",
-            ClassesSourceOfTruth = [new Class() { ClassName = "test"}, new Class() { ClassName = "anotherTeSt"}, new Class() { ClassName = "DoesntContainSearchParam" }]
+            ClassesSourceOfTruth = [new Class() { ClassName = "test" }, new Class() { ClassName = "anotherTeSt" }, new Class() { ClassName = "DoesntContainSearchParam" }]
         };
         vm.Classes.Clear();
 

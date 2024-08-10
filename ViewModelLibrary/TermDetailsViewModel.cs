@@ -17,7 +17,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
         SelectionChangedCommand = new Command(execute: () => SelectionChanged());
         RemoveClassCommand = new Command<Class>(execute: (Class classToDelete) => RemoveClass(classToDelete));
         SaveCommand = new Command(execute: async () => await Save());
-        
+
     }
 
     // Collections
@@ -112,7 +112,7 @@ public class TermDetailsViewModel : INotifyPropertyChanged
     private async Task Load()
     {
         activeUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
-        var allClasses = await DbContext.GetFilteredListAsync<Class>(c =>  c.CreatedBy == activeUserEmail);
+        var allClasses = await DbContext.GetFilteredListAsync<Class>(c => c.CreatedBy == activeUserEmail);
         AllClasses = allClasses.AsEnumerable();
         if (SelectedCG != null)
         {

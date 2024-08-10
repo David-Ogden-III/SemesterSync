@@ -11,7 +11,7 @@ public class AllTermsVMTest
         AllTermsViewModel vm = new(null)
         {
             SearchParams = String.Empty,
-            ClassesSourceOfTruth = [new ClassGroup(new Term(), []),new ClassGroup(new Term(), [])]
+            ClassesSourceOfTruth = [new ClassGroup(new Term(), []), new ClassGroup(new Term(), [])]
         };
         vm.Classes.Clear();
 

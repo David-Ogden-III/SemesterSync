@@ -1,6 +1,6 @@
+using ModelLibrary;
 using System.Diagnostics;
 using ViewModelLibrary;
-using ModelLibrary;
 
 namespace SemesterSync.Views;
 

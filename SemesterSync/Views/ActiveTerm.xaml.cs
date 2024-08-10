@@ -1,7 +1,7 @@
-﻿using System.Diagnostics;
-using ViewModelLibrary;
+﻿using CommunityToolkit.Maui.Core;
 using ModelLibrary;
-using CommunityToolkit.Maui.Core;
+using System.Diagnostics;
+using ViewModelLibrary;
 
 namespace SemesterSync.Views;
 

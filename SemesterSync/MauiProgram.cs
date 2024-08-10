@@ -1,8 +1,8 @@
 ﻿using CommunityToolkit.Maui;
 using Microsoft.Extensions.Logging;
 using Plugin.LocalNotification;
-using ViewModelLibrary;
 using SemesterSync.Views;
+using ViewModelLibrary;
 
 namespace SemesterSync
 {

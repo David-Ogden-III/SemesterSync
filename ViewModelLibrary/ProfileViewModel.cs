@@ -95,7 +95,7 @@ public class ProfileViewModel : INotifyPropertyChanged
     {
         ActiveUserEmail = await authService.RetrieveUserEmailFromSecureStorage();
         ActiveUser = await DbContext.GetFilteredItemAsync<User>(user => user.Email == ActiveUserEmail);
-        
+
         FirstName = ActiveUser.FirstName;
         LastName = ActiveUser.LastName;
         PhoneNumber = ActiveUser.PhoneNumber;

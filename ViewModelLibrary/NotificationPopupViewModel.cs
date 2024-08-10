@@ -1,5 +1,5 @@
-﻿using Plugin.LocalNotification;
-using ModelLibrary;
+﻿using ModelLibrary;
+using Plugin.LocalNotification;
 using System.ComponentModel;
 using System.Diagnostics;
 

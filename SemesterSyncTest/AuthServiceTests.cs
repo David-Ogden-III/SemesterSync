@@ -12,7 +12,7 @@ public class AuthServiceTests
         MockDbContext.db = null;
         string testEmail = "TestEmail@email.com";
         string testPassword = "password";
-        UserDTO userDTO = new(testEmail, testPassword);        
+        UserDTO userDTO = new(testEmail, testPassword);
         FakeAuthService fakeAuthService = FakeAuthService.GetInstance();
 
 

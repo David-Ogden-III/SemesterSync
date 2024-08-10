@@ -148,7 +148,7 @@ public class AddModifyExamVMTest
     {
         AddModifyExamPopupViewModel vm = new();
         vm.SelectedExam = null;
-        vm.StartDate = new DateTime(2024,06,01);
+        vm.StartDate = new DateTime(2024, 06, 01);
         vm.EndDate = new DateTime(2025, 06, 01);
         vm.StartTime = vm.StartDate.TimeOfDay;
         vm.EndTime = vm.EndDate.TimeOfDay;

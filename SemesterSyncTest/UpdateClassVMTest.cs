@@ -1,5 +1,4 @@
 ﻿using ViewModelLibrary;
-using ModelLibrary;
 
 namespace SemesterSyncTest;
 

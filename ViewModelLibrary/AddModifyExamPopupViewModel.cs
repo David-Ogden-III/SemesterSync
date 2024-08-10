@@ -109,7 +109,7 @@ public class AddModifyExamPopupViewModel : INotifyPropertyChanged
         bool inputsAreValid = await ValidateInputs();
         if (!inputsAreValid)
         {
-            return null;    
+            return null;
         }
 
         SelectedExam ??= new(new Exam(), "")
